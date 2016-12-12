@@ -17,3 +17,21 @@
   justify-content: space-between;
   align-items: center;
 }
+
+.hand {
+  display: flex;
+  flex-direction: row;
+}
+
+.player {
+  display: flex;
+  flex-direction: column;
+}
+
+.dealer {
+  order: 1;
+}
+
+.player-ui {
+  width: 100%;
+}
