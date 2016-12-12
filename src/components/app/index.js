@@ -1,24 +1,18 @@
-import React, { Component, PropTypes } from 'react'
-import { Link } from 'react-router'
-import style from './style.css'
+import React, { PropTypes } from 'react'
+import GameTable from '../GameTable'
+import PlayerUI from '../PlayerUI'
 
-class App extends Component {
-  render() {
+const App = () => {
+
     return (
-        <div className={style.root}>
-            <h1>{'React App'}</h1>
-            <ul>
-                <li><Link to="/">{'Home'}</Link></li>
-            </ul>
-
-            {this.props.children}
+        <div className="app">
+          <h2>APP</h2>
+          <GameTable />
+          <PlayerUI />
         </div>
-    )
-  }
+      )
+
 }
 
-App.propTypes = {
-  children: PropTypes.node
-}
 
 export default App

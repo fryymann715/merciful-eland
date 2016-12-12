@@ -37,7 +37,7 @@
     "webpack-notifier": "^1.4.1"
   },
   "scripts": {
-    "start": "webpack-dev-server --history-api-fallback --host 0.0.0.0 --hot --inline --progress",
+    "start": "webpack-dev-server --history-api-fallback --host 127.0.0.1 --port 5000 --hot --inline --progress",
     "prebuild": "npm run clean",
     "build": "cross-env NODE_ENV=production webpack -p",
     "postbuild": "npm run copy",
