@@ -1,33 +1,43 @@
-# React boilerplate
-A boilerplate to start a client-side project using React.
+# BlackJack for the Web in ReactJS
 
-## Features
-- [ES2015](https://babeljs.io/docs/learn-es2015)
-- [React](https://github.com/facebook/react)
-- [React Router](https://github.com/reactjs/react-router)
-- [CSS modules](https://github.com/css-modules/css-modules)
-- [PostCSS](http://postcss.org)
+## Specs
 
-## Tools
-- [Webpack](https://github.com/webpack/webpack)
-    - [webpack-dev-server](https://github.com/webpack/webpack-dev-server) with HMR support
-    - [webpack-notifier](https://github.com/Turbo87/webpack-notifier)
-- [Babel 6](https://github.com/babel/babel) with presets for:
-    - ES2015 using [babel-preset-es2015](https://github.com/babel/babel/tree/master/packages/babel-preset-es2015)
-    - React using [babel-preset-react](https://github.com/babel/babel/tree/master/packages/babel-preset-react)
-    - React HMR and error catching using [babel-preset-react-hmre](https://github.com/babel/babel/tree/master/packages/babel-preset-react-hmre)
-- [ESLint](https://github.com/eslint/eslint) configured to:
-    - use Babel 6 as parser using [babel-eslint](https://github.com/babel/babel-eslint)
-    - lint page on save using [eslint-loader](https://github.com/MoOx/eslint-loader)
-
-## Hot Module Replacement (HMR) in action
-![ScreenShot](https://cloud.githubusercontent.com/assets/983189/12616751/91833172-c504-11e5-87e9-f36efbd1d17c.gif)
-
-As you can see the HMR is working without reloading the page for React components and styles.
-
-## Getting started
-```bash
-$ git clone https://github.com/rbartoli/react-boilerplate.git
-$ npm i
-$ npm start
-```
+ - ### Stack / Tech
+    - ReactJS 
+    - Manage state without Redux/Flux
+    - No Database
+    - Do not use 3rd part CSS library/framework
+    
+ 
+ - ### Players can:
+    - Start a new game
+    - Hit / Stay 
+    - Place bet ( can not place bet larger than player's funds )
+    - Quit
+    
+    STRETCH: double down, split, buy insurance
+    
+ 
+ - ### Table Features
+    - 4 players + 1 dealer
+    - 2 decks
+    - players start with $100
+    - min bet starts at $10 ( STRETCH: Increase min bet based on player funds )
+    - deck is persistent through the rounds
+    - player bet refunded on push
+    - dealer hits on 17
+    
+ 
+ - ### Win / Loss Conditions:
+    - Win:
+       - Get blackjack
+       - Get 21
+       - Dealer busts
+       - Have a higher hand value than dealer while still under 21
+      
+    - Lose:
+       - Hand value exceeds 21 ( Bust )
+       - Dealer gets blackjack
+       - Dealer's hand value is under 21 and higher than player hand value
+      
+ 
