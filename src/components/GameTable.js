@@ -6,7 +6,9 @@ const GameTable = () => {
 
   return (
     <div className="table">
-      <Player />
+      <Player name="One" />
+      <Player name="Human" />
+      <Player name="Two" />
       <Dealer />
     </div>
   )
