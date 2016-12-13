@@ -1,11 +1,15 @@
 import React from 'react'
+import club from '../../public/club.png'
+import heart from '../../public/heart.png'
+import diamond from '../../public/diamond.png'
+import spade from '../../public/spade.png'
 
 const Card = ({face, suit}) => {
   const getSuitImage = (suit) => {
-    if(suit == "Heart") return "../../public/heart.png"
-    else if(suit == "Spade") return "../../public/spade.png"
-    else if(suit == "Club") return "../../public/Club.png"
-    else return "../../public/Diamond.png"
+    if(suit == "Heart") return heart
+    else if(suit == "Spade") return spade
+    else if(suit == "Club") return club
+    else return diamond
   }
 
   return (
