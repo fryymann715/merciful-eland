@@ -4,29 +4,32 @@ import Dealer from './Dealer'
 
 const GameTable = ({ deck, players, round }) => {
 
-  let dealer, ai_1, ai_2, player
+  let dealer
 
   if ( round === 0 ) {
-    dealer = { name: players[0].name }
-    ai_1 = { name: players[1].name }
-    ai_2 = { name: players[2].name }
-    player = { name: players[3].name }
+    players.map( player => {
+      if ( player.role === 'dealer' ){ dealer = { name: player.name } }
+    })
   }
 
+  console.log(dealer)
+  // const dealerName = dealer.name
+  // console.log(dealerName)
 
   return (
     <div className="table">
 
       <div className="dealer-slot">
-        <Dealer name={dealer.name}/>
+        {/* <Dealer name={dealer.name}/> */}
+        <Dealer />
       </div>
 
       <div className="ai-slot">
-        <Player name={ai_2.name} />
-        <Player name={ai_1.name} />
+        <Player />
+        <Player />
       </div>
       <div className="player-slot">
-        <Player name={player.name} />
+        <Player />
       </div>
     </div>
   )
