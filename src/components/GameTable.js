@@ -7,7 +7,7 @@ const GameTable = ({ deck, players, round }) => {
   let dealer, ai_1, ai_2, player
 
   if ( round === 0 ) {
-    dealer = { name: players[0] }
+    dealer = { name: players[0].name }
     ai_1 = { name: players[1].name }
     ai_2 = { name: players[2].name }
     player = { name: players[3].name }
@@ -18,15 +18,15 @@ const GameTable = ({ deck, players, round }) => {
     <div className="table">
 
       <div className="dealer-slot">
-        <Dealer />
+        <Dealer name={dealer.name}/>
       </div>
 
       <div className="ai-slot">
-        <Player name="Two" />
-        <Player name="One" />
+        <Player name={ai_2.name} />
+        <Player name={ai_1.name} />
       </div>
       <div className="player-slot">
-        <Player name="Human" />
+        <Player name={player.name} />
       </div>
     </div>
   )
@@ -35,7 +35,8 @@ const GameTable = ({ deck, players, round }) => {
 
 GameTable.propTypes = {
   deck: PropTypes.array,
-  players: PropTypes.array
+  players: PropTypes.array,
+  round: PropTypes.number
 }
 
 export default GameTable

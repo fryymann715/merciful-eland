@@ -4,7 +4,7 @@ import Hand from './Hand'
 const Player = ({ name }) => {
 
   return (
-    <div className="ai player" >
+    <div className="player" >
       <h3> {name} </h3>
       <Hand />
     </div>
