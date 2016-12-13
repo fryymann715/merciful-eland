@@ -1,4 +1,4 @@
-import React, { Component, PropTypes } from 'react'
+import React, { Component } from 'react'
 import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
 
@@ -9,7 +9,7 @@ export default class App extends Component {
     this.state = {
       deck: [],
       players: [],
-      number_of_decks: -1,
+      number_of_decks: 2,
       round: 0,
       turn: 0
     }
@@ -18,6 +18,42 @@ export default class App extends Component {
   componentDidMount() {
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
     this.createCards(decks)
+    this.createPlayers()
+  }
+
+  createPlayers() {
+    const dealerName = 'Jeff Goldblum'
+    const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
+    const playerName = 'Player'
+
+    const players = []
+
+    const dealer = {
+      name: dealerName,
+      hands: [],
+      role: 'dealer'
+    }
+    players.push( dealer )
+
+    for ( let i=1; i <= 2; i++ ) {
+      const ai = {
+        name: aiNames[i],
+        bank: 100,
+        hands: [],
+        role: `ai_${i}`
+      }
+      players.push( ai )
+    }
+
+    const player = {
+      name: playerName,
+      bank: 100,
+      hands: [],
+      role: 'human'
+    }
+    players.push( player )
+
+    this.setState({ players })
   }
 
   createCards(deckQuantity) {
@@ -28,14 +64,9 @@ export default class App extends Component {
       const suits = ['Spade','Diamond','Club','Heart']
 
       for (var i = 0; i < 4; i++) {
-
         for (var j = 0; j < 13; j++) {
-
           let item = { face: faces[j], suit: suits[i], value: this.getValue(faces[j]), faceDown: false }
-
           item.isAce = ( item.value == 255 ) ? true : false
-          // if( item.value == 255 ) item.isAce = true
-          // else item.isAce = null
           cards.push(item)
         }
       }
@@ -46,7 +77,6 @@ export default class App extends Component {
     }
 
     let merged = [].concat.apply([], decks)
-    console.log("MERGED", merged);
     this.setState({ deck: merged })
   }
 
@@ -70,10 +100,14 @@ export default class App extends Component {
   }
 
   render() {
+    const deck = this.state.deck,
+          players = this.state.players,
+          round = this.state.round
+
     return (
         <div className="app">
           <h2>APP</h2>
-          <GameTable />
+          <GameTable deck={deck} players={players} round={round}/>
           <PlayerUI />
         </div>
       )
