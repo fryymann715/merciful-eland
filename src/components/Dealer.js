@@ -1,13 +1,18 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import Hand from './Hand'
 
-const Dealer = () => {
+const Dealer = ({ name }) => {
+
   return (
     <div className="player dealer">
-      <h3>DEALER</h3>
+      <h3> {name} </h3>
       <Hand />
     </div>
   )
+}
+
+Dealer.propTypes = {
+  name: PropTypes.string,
 }
 
 export default Dealer

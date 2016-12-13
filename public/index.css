@@ -1,5 +1,12 @@
 * {
-  border: solid red 1px;
+  border: solid white 1px;
+}
+
+.ai-slot {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .app {
@@ -10,10 +17,11 @@
 }
 
 .table {
+  background-color: rgb(26, 85, 28);
   width: 95%;
   height: 500px;
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
   justify-content: space-between;
   align-items: center;
 }
@@ -33,5 +41,6 @@
 }
 
 .player-ui {
-  width: 100%;
+  width: 80%;
+  background-color: lightgrey;
 }
