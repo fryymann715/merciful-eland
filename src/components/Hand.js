@@ -5,8 +5,8 @@ const Hand = () => {
 
   return (
     <div className="hand">
-      <Card />
-      <Card />
+      <Card face={"5"}, suit={"Spade"}/>
+      <Card face={"K"}, suit={"Heart"}/>
     </div>
   )
 }
