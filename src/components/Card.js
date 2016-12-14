@@ -4,7 +4,7 @@ import heart from '../../public/images/heart.png'
 import diamond from '../../public/images/diamond.png'
 import spade from '../../public/images/spade.png'
 
-const Card = ({face, suit, faceDown}) => {
+const Card = ({ face, suit, faceDown }) => {
 
   // const backOrNot = faceDown ? <div className="face-down"></div> : <div></div>
   // const onOrOff = faceDown ? "serafinOff" : "serafinOn"
@@ -20,17 +20,8 @@ const Card = ({face, suit, faceDown}) => {
 
   return (
     <div className={"card"} >
-      {/* // <div className={onOrOff}>
-      // </div>
-      // <div className={offOrOn}>
-      //   <div className="backOrNot">Pos</div>
-      //   <div className="row">
-      //     <h1 className="face">{face}</h1>
-      //   </div>
-      //   <div className="row">
-      //     <img src={getSuitImage(suit)}></img>
-        // </div>
-      // </div> */}
+      <span>{ face }</span>
+      <span>{ suit }</span>
 
     </div>
     )

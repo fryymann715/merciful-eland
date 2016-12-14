@@ -1,14 +1,20 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 import Card from './Card'
 
-const Hand = () => {
+const Hand = ({ handArray }) => {
+
+  const cards =  handArray ? handArray.map( ( card, key ) => {
+    return <Card key={key} face={card.face} suit={card.suit} faceDown={card.faceDown} />}) : []
 
   return (
     <div className="hand">
-      <Card face={"5"} suit={"Spade"} faceDown={true}/>
-      <Card face={"K"} suit={"Club"}/>
+      { cards }
     </div>
   )
+}
+
+Hand.propTypes = {
+  handArray: PropTypes.array
 }
 
 export default Hand

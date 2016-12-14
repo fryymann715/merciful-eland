@@ -90,15 +90,22 @@ export default class App extends Component {
   }
 
   testDeal() {
-    let { dealer, deck } = this.state
+    let { ai_1, ai_2, dealer, deck, player, round } = this.state
+
     console.log( deck.length )
     console.log( dealer )
 
-    dealer.hand.push( deck.shift() )
-    console.log( deck.length )
-    console.log( dealer )
+    for ( let cycle = 0; cycle<2; cycle++ ) {
+      ai_1.hand.push( deck.shift() )
+      player.hand.push( deck.shift() )
+      ai_2.hand.push( deck.shift() )
+      dealer.hand.push( deck.shift() )
+    }
+    round++
 
-    this.setState({ dealer, deck })
+    console.log( ai_1, ai_2, dealer, player )
+    console.log(deck.length)
+    this.setState({ ai_1, ai_2, dealer, deck, player, round })
 
   }
 
