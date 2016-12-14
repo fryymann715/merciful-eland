@@ -1,5 +1,10 @@
-* {
-  border: solid white 1px;
+/** {
+  border: solid red 1px;
+}*/
+
+h1, h2, h3, h4, h5, h6 {
+  margin: 0px;
+  padding: 0px;
 }
 
 .ai-slot {
@@ -43,4 +48,48 @@
 .player-ui {
   width: 80%;
   background-color: lightgrey;
+}
+
+.card {
+  border: solid white .5px;
+  border-raidus: 5px;
+  margin: 2px;
+  padding: 10px;
+}
+
+.card.faceUp {
+  background-color: white;
+}
+
+.card.faceDown {
+  background-image: url("./images/spade.png")
+}
+
+.card img {
+  width: 25px;
+  height: 25px;
+  background-color: white;
+}
+
+.card .face {
+  background-color: white;
+}
+
+.card row {
+  height: 100px;
+}
+
+.face-down {
+  background-color: black;
+  padding: 5px;
+  height: 15px;
+  width: 15px;
+}
+
+.serafinOn{
+  display: inline;
+}
+
+.serafinOff{
+  display: none;
 }
