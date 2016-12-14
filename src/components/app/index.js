@@ -7,9 +7,12 @@ export default class App extends Component {
   constructor( props ) {
     super(props)
     this.state = {
+      ai_1: {},
+      ai_2: {},
+      dealer: {},
       deck: [],
-      players: [],
       number_of_decks: 2,
+      player: {},
       round: 0,
       turn: 0
     }
@@ -26,34 +29,22 @@ export default class App extends Component {
     const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
     const playerName = 'Player'
 
-    const players = []
-
     const dealer = {
       name: dealerName,
-      hands: [],
+      hand: [],
       role: 'dealer'
     }
-    players.push( dealer )
 
-    for ( let i=1; i <= 2; i++ ) {
-      const ai = {
-        name: aiNames[i],
-        bank: 100,
-        hands: [],
-        role: `ai_${i}`
-      }
-      players.push( ai )
-    }
+    const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
+    const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
 
     const player = {
       name: playerName,
       bank: 100,
-      hands: [],
-      role: 'human'
+      hand: [],
+      role: 'player'
     }
-    players.push( player )
-
-    this.setState({ players })
+    this.setState({ dealer, ai_1, ai_2, player })
   }
 
   createCards(deckQuantity) {
@@ -100,14 +91,13 @@ export default class App extends Component {
   }
 
   render() {
-    const deck = this.state.deck,
-          players = this.state.players,
-          round = this.state.round
+
+    const { ai_1, ai_2, dealer, deck, player, round } = this.state
 
     return (
         <div className="app">
           <h2>APP</h2>
-          <GameTable deck={deck} players={players} round={round}/>
+          <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
           <PlayerUI />
         </div>
       )

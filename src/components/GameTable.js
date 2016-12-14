@@ -2,34 +2,23 @@ import React, { PropTypes } from 'react'
 import Player from './Player'
 import Dealer from './Dealer'
 
-const GameTable = ({ deck, players, round }) => {
+const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
-  let dealer
 
-  if ( round === 0 ) {
-    players.map( player => {
-      if ( player.role === 'dealer' ){ dealer = { name: player.name } }
-    })
-  }
-
-  console.log(dealer)
-  // const dealerName = dealer.name
-  // console.log(dealerName)
 
   return (
     <div className="table">
 
       <div className="dealer-slot">
-        {/* <Dealer name={dealer.name}/> */}
-        <Dealer />
+        <Dealer name={dealer.name}/>
       </div>
 
       <div className="ai-slot">
-        <Player />
-        <Player />
+        <Player name={ai_1.name}/>
+        <Player name={ai_2.name}/>
       </div>
       <div className="player-slot">
-        <Player />
+        <Player name={player.name}/>
       </div>
     </div>
   )
@@ -37,8 +26,11 @@ const GameTable = ({ deck, players, round }) => {
 }
 
 GameTable.propTypes = {
+  ai_1: PropTypes.object,
+  ai_2: PropTypes.object,
+  dealer: PropTypes.object,
   deck: PropTypes.array,
-  players: PropTypes.array,
+  player: PropTypes.object,
   round: PropTypes.number
 }
 

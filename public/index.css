@@ -10,7 +10,7 @@ h1, h2, h3, h4, h5, h6 {
 .ai-slot {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  flex-direction: row-reverse;;
   justify-content: space-between;
 }
 
