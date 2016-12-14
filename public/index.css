@@ -1,17 +1,29 @@
-/** {
-  border: solid red 1px;
-}*/
+* {
+  /*border: solid red 1px;*/
+}
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0px;
   padding: 0px;
 }
 
-.ai-slot {
+.slot {
   width: 100%;
   display: flex;
+  align-items: center;
+}
+
+.ai-slot {
   flex-direction: row-reverse;;
   justify-content: space-between;
+}
+
+.player-slot {
+  justify-content: center;
+}
+
+.dealer-slot {
+  justify-content: center;
 }
 
 .app {
@@ -24,7 +36,7 @@ h1, h2, h3, h4, h5, h6 {
 .table {
   background-color: rgb(26, 85, 28);
   width: 95%;
-  height: 500px;
+  height: 400px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;

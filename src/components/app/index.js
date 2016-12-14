@@ -18,6 +18,7 @@ export default class App extends Component {
     }
     this.testDeal = this.testDeal.bind( this )
     this.setupGame = this.setupGame.bind( this )
+    this.showDealerCard = this.showDealerCard.bind( this )
   }
 
   componentDidMount() {
@@ -34,6 +35,7 @@ export default class App extends Component {
     const dealerName = 'Jeff Goldblum'
     const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
     const playerName = 'Player'
+    const round = 0
 
     const dealer = {
       name: dealerName,
@@ -50,7 +52,7 @@ export default class App extends Component {
       hand: [],
       role: 'player'
     }
-    this.setState({ dealer, ai_1, ai_2, player })
+    this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
   createCards(deckQuantity) {
@@ -63,7 +65,7 @@ export default class App extends Component {
       for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 13; j++) {
           let item = { face: faces[j], suit: suits[i], value: this.getValue(faces[j]), faceDown: false }
-          item.isAce = ( item.value == 255 ) ? true : false
+          item.isAce = ( item.value == 11 ) ? true : false
           cards.push(item)
         }
       }
@@ -75,6 +77,12 @@ export default class App extends Component {
 
     let merged = [].concat.apply([], decks)
     this.setState({ deck: merged })
+  }
+
+  getValue(face) {
+    if(face === 'A') return 11
+    else if(face === 'J' || face === 'Q' || face === 'K') return 10
+    else return parseInt(face)
   }
 
   shuffle(passByReference) {
@@ -92,9 +100,6 @@ export default class App extends Component {
   testDeal() {
     let { ai_1, ai_2, dealer, deck, player, round } = this.state
 
-    console.log( deck.length )
-    console.log( dealer )
-
     if ( round < 1 ) {
       for ( let cycle = 0; cycle<2; cycle++ ) {
         ai_1.hand.push( deck.shift() )
@@ -107,18 +112,16 @@ export default class App extends Component {
     } else {
       return
     }
-
-
     console.log( ai_1, ai_2, dealer, player )
     console.log(deck.length)
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
-
   }
 
-  getValue(face) {
-    if(face === 'A') return 255
-    else if(face === 'J' || face === 'Q' || face === 'K') return 10
-    else return parseInt(face)
+
+  showDealerCard() {
+    let { dealer } = this.state
+    dealer.hand[0].faceDown = false
+    this.setState({ dealer })
   }
 
   render() {
@@ -129,7 +132,7 @@ export default class App extends Component {
         <div className="app">
           <h2>APP</h2>
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI testDeal={this.testDeal} reset={this.setupGame} />
+          <PlayerUI testDeal={this.testDeal} reset={this.setupGame} showCard={this.showDealerCard} />
         </div>
       )
   }

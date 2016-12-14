@@ -9,15 +9,15 @@ const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
   return (
     <div className="table">
 
-      <div className="dealer-slot">
+      <div className="slot dealer-slot">
         <Dealer name={ dealer.name } hand={ dealer.hand }/>
       </div>
 
-      <div className="ai-slot">
+      <div className="slot ai-slot">
         <Player name={ ai_1.name } hand={ ai_1.hand }/>
         <Player name={ ai_2.name } hand={ ai_2.hand }/>
       </div>
-      <div className="player-slot">
+      <div className="slot player-slot">
         <Player name={player.name} hand={player.hand} />
       </div>
     </div>
