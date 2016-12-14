@@ -55,10 +55,12 @@ h1, h2, h3, h4, h5, h6 {
   border-raidus: 5px;
   margin: 2px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card.faceUp {
-  background-color: white;
+
 }
 
 .card.faceDown {
@@ -71,7 +73,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: white;
 }
 
-.card .face {
+.card.face {
   background-color: white;
 }
 
@@ -86,10 +88,11 @@ h1, h2, h3, h4, h5, h6 {
   width: 15px;
 }
 
-.serafinOn{
+.displayNormal{
   display: inline;
+  background-color: white;
 }
 
-.serafinOff{
+.displayNone{
   display: none;
 }

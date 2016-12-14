@@ -95,13 +95,19 @@ export default class App extends Component {
     console.log( deck.length )
     console.log( dealer )
 
-    for ( let cycle = 0; cycle<2; cycle++ ) {
-      ai_1.hand.push( deck.shift() )
-      player.hand.push( deck.shift() )
-      ai_2.hand.push( deck.shift() )
-      dealer.hand.push( deck.shift() )
+    if ( round < 1 ) {
+      for ( let cycle = 0; cycle<2; cycle++ ) {
+        ai_1.hand.push( deck.shift() )
+        player.hand.push( deck.shift() )
+        ai_2.hand.push( deck.shift() )
+        dealer.hand.push( deck.shift() )
+        if (cycle === 0) { dealer.hand[0].faceDown = true}
+      }
+      round++
+    } else {
+      return
     }
-    round++
+
 
     console.log( ai_1, ai_2, dealer, player )
     console.log(deck.length)
