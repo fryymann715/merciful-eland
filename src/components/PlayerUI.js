@@ -1,11 +1,26 @@
-import React from 'react'
+import React, { PropTypes } from 'react'
 
-const PlayerUI = () => {
+const PlayerUI = ({ testDeal, reset }) => {
+
+  const handleDeal = () => {
+    testDeal()
+  }
+
+  const handleReset = () => {
+    reset()
+  }
+
   return (
     <div className="player-ui">
-    Player UI
+      <button onClick={ handleDeal } >Deal</button>
+      <button onClick={ handleReset } >RESET</button>
     </div>
   )
+}
+
+PlayerUI.propTypes = {
+  testDeal: PropTypes.func,
+  reset: PropTypes.func
 }
 
 export default PlayerUI

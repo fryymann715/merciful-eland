@@ -16,9 +16,15 @@ export default class App extends Component {
       round: 0,
       turn: 0
     }
+    this.testDeal = this.testDeal.bind( this )
+    this.setupGame = this.setupGame.bind( this )
   }
 
   componentDidMount() {
+    this.setupGame()
+  }
+
+  setupGame() {
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
     this.createCards(decks)
     this.createPlayers()
@@ -83,6 +89,18 @@ export default class App extends Component {
     }
   }
 
+  testDeal() {
+    let { dealer, deck } = this.state
+    console.log( deck.length )
+    console.log( dealer )
+
+    dealer.hand.push( deck.shift() )
+    console.log( deck.length )
+    console.log( dealer )
+
+    this.setState({ dealer, deck })
+
+  }
 
   getValue(face) {
     if(face === 'A') return 255
@@ -98,7 +116,7 @@ export default class App extends Component {
         <div className="app">
           <h2>APP</h2>
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI />
+          <PlayerUI testDeal={this.testDeal} reset={this.setupGame} />
         </div>
       )
   }
