@@ -13,7 +13,7 @@ export default class App extends Component {
       deck: [],
       number_of_decks: 2,
       player: {},
-      round: 1,
+      round: 0,
       turn: 0
     }
     this.hitItPlayer = this.hitItPlayer.bind( this )
@@ -52,7 +52,7 @@ export default class App extends Component {
 
     const dealer = {
       name: dealerName,
-      hand: { cards: [], value: 0, currentBet: 0 },
+      hand: [],
       role: 'dealer'
     }
 
@@ -126,6 +126,7 @@ export default class App extends Component {
       return
     }
     console.log(deck.length)
+    player.hand.value = this.handValue()
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
   }
 
@@ -169,7 +170,7 @@ export default class App extends Component {
     return (
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI testDeal={this.testDeal} reset={this.newRound} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer} playerBank={player.bank}/>
+          <PlayerUI testDeal={this.testDeal} reset={this.newRound} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer} playerBank={player.bank} />
         </div>
       )
   }

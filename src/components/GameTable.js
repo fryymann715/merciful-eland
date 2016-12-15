@@ -17,9 +17,11 @@ const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
         <Player name={ ai_1.name } hand={ ai_1.hand }/>
         <Player name={ ai_2.name } hand={ ai_2.hand }/>
       </div>
+
       <div className="slot player-slot">
         <Player name={player.name} hand={player.hand} />
       </div>
+
     </div>
   )
 

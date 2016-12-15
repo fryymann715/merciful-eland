@@ -16,7 +16,7 @@ const PlayerUI = ({ hitItPlayer, playerBank, reset, showCard, testDeal }) => {
 
   return (
     <div className="player-ui">
-      <span className="player-bank">{playerBank}</span>
+      <span className="player-bank"><h3>{playerBank}</h3></span>
       <button onClick={ handleDeal } >Deal</button>
       <button onClick={ handleReset } >RESET</button>
       <button onClick={ handleShowCard } >show dealer</button>
