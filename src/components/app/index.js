@@ -204,17 +204,66 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, round, turn})
   }
 
-  calcLocalStorage(type) {
-     = JSON.parse(localStorage.getItem(type) || '{}')
-    if (stats[type].count > 0) {
-      stats[type].count++
+  aiTurn( whichAiPlayer ) {
+    let holdStats = getLocalStorage('hold')
+    let hitStats = getLocalStorage('hitStats')
+
+
+
+    if () {
+      hitItPlayer( whichAiPlayer )
+    } else {
+      // skip turn by doing nothing. We're holding.
     }
-    localStorage.setItem(type, JSON.stringify(player.hand, dealer.hand))
   }
 
+  getLocalStorage(type) {
+    let stats = JSON.parse(localStorage.getItem(type) || '{}')
+    if (stats.count > 0) {
+      stats.count++
+    }
+    return stats
+  }
+
+
+
+let holdStats = {
+  currentlyGathering: true,
+  playerHand: player.hand,
+  playerValue: this.handValue( player.hand ),
+  dealerHand: dealer.hand,
+  dealerValue: this.handValue( dealer.hand ),
+  hitOrStay: 'hit',
+  winOrLose: 'pending'
+}
+
+  makeChoice(type) {
+    // Seek similar hands to what player had
+    let predictAction = getLocalStorage(type).find( (ele) => {
+      if(ele.playerValue >= p1ofN*currPlayerValue && ele.playerValue < p2ofN*currPlayerValue) return ele.hitOrStay
+    })
+
+    // If unable to find similar circumstance, then guess
+    // random and adjust weights
+    if( predictAction === undefined) {
+      do {
+        p1ofN = Math.random()
+        p2ofN = Math.random()
+      } while (p1ofN > p2ofN)
+      // Store random value into database to check against later
+      predictAction = Math.random() > 0.5 ? 'hit' : 'stay'
+    }
+    return predictAction
+  }
+
+
   holdButton() {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
     // START AI Capture K for k-n-n
-    let holdStats = calcLocalStorage('hold')
+    let holdStats = { player, dealer }
+    localStorage.setItem('hold', JSON.stringify( getLocalStorage('hold') ))
+    localStorage.setItem('hold', JSON.stringify( holdStats ))
     // END AI
   }
 
@@ -223,7 +272,7 @@ export default class App extends Component {
    let { ai_1, ai_2, dealer, player, deck } = this.state
 
    // START AI Capture K for k-n-n
-   let hitStats = calcLocalStorage('hit')
+   localStorage.setItem('hit', JSON.stringify( getLocalStorage('hit') ))
    // END AI
 
    console.log('--> Hand with length?', player.hand)
