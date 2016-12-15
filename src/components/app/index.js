@@ -218,24 +218,19 @@ export default class App extends Component {
   }
 
   getLocalStorage(type) {
-    let stats = JSON.parse(localStorage.getItem(type) || '{}')
-    if (stats.count > 0) {
-      stats.count++
+    let holdStats = {
+      currentlyGathering: true,
+      playerHand: player.hand,
+      playerValue: this.handValue( player.hand ),
+      dealerHand: dealer.hand,
+      dealerValue: this.handValue( dealer.hand ),
+      hitOrStay: type,
+      winOrLose: 'pending'
     }
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    stats.push( holdStats )
     return stats
   }
-
-
-
-let holdStats = {
-  currentlyGathering: true,
-  playerHand: player.hand,
-  playerValue: this.handValue( player.hand ),
-  dealerHand: dealer.hand,
-  dealerValue: this.handValue( dealer.hand ),
-  hitOrStay: 'hit',
-  winOrLose: 'pending'
-}
 
   makeChoice(type) {
     // Seek similar hands to what player had
@@ -261,9 +256,7 @@ let holdStats = {
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
     // START AI Capture K for k-n-n
-    let holdStats = { player, dealer }
     localStorage.setItem('hold', JSON.stringify( getLocalStorage('hold') ))
-    localStorage.setItem('hold', JSON.stringify( holdStats ))
     // END AI
   }
 
@@ -336,6 +329,14 @@ let holdStats = {
       this.setState({ player })
     }
     // console.log( "BET", betAmount )
+
+// rebase code below
+    // let value = 0
+    // hand.map( card => {
+    //   value += card.value
+    // })
+    // return value
+// rebase code ends
   }
 
   playerStay() {
