@@ -28,6 +28,7 @@ export default class App extends Component {
 
   componentDidMount() {
     this.setupGame()
+    //this.doRound()
   }
 
   placeBet() {
@@ -112,6 +113,16 @@ export default class App extends Component {
     }
     player.hand.value = this.handValue( player.hand )
     this.setState({ player })
+  }
+
+  doRound() {
+    // let { turn } = this.state
+    if( this.state.turn < 1 ){ this.testDeal() }
+
+    else if( this.state.turn == 1 ) {
+      this.placeBet()
+    }
+
   }
 
   getValue( face ) {

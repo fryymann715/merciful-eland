@@ -21,7 +21,9 @@ h1, h2, h3, h4, h5, h6 {
 
 .card {
   border: solid white .5px;
-  border-raidus: 5px;
+  border-radius: 5px;
+  height: 120px;
+  width: 60px;
   margin: 2px;
   padding: 10px;
   display: flex;
@@ -29,13 +31,13 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card img {
-  width: 25px;
-  height: 25px;
+  /*width: 25px;
+  height: 25px;*/
   background-color: white;
 }
 
 .card row {
-  height: 100px;
+  /*height: 100px;*/
 }
 
 .card.face {
@@ -61,7 +63,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .displayNormal{
-  display: inline;
+  display: block;
   background-color: white;
 }
 
