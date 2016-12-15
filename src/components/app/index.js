@@ -216,6 +216,8 @@ export default class App extends Component {
   }
 
   getLocalStorage(type) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
     let holdStats = {
       currentlyGathering: true,
       playerHand: player.hand,
@@ -256,7 +258,7 @@ export default class App extends Component {
 
     // START AI Capture K for k-n-n
     if( whichPlayer === 'player') {
-      localStorage.setItem('hold', JSON.stringify( getLocalStorage('hold') ))
+      localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
     }
     // END AI
   }
@@ -267,7 +269,7 @@ export default class App extends Component {
 
    // START AI Capture K for k-n-n
    if( whichPlayer === 'player') {
-     localStorage.setItem('hit', JSON.stringify( getLocalStorage('hit') ))
+     localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
    }
    // END AI
 
