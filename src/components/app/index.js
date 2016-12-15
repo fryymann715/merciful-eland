@@ -136,6 +136,59 @@ export default class App extends Component {
 
     if ( value > 21 && hasAce ) { value -= 10 }
     return value
+}
+
+  gameLoop( playerTurn, t ) {
+    let turn = t
+    if( playerTurn !== 'player' ) {
+      do {
+        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
+        else t++
+      } while ( turn === t )
+    } else {
+      // Wait for player to click a button
+    }
+    return turn
+  }
+
+  testDeal() {
+    let { ai_1, ai_2, dealer, deck, player, round, turn } = this.state
+
+    if ( round < 1 ) {
+      for ( let cycle = 0; cycle<2; cycle++ ) {
+        ai_1.hand.push( deck.shift() )
+        player.hand.push( deck.shift() )
+        ai_2.hand.push( deck.shift() )
+        dealer.hand.push( deck.shift() )
+        if (cycle === 0) { dealer.hand[0].faceDown = true}
+      }
+      round = 1
+      turn = 1
+      // Done with initialization, begin turns
+
+      // Turn 1 = ai_1
+      turn = gameLoop( 'ai_1', turn )
+
+      // NOTE: We won't be moving on to turn 3 until after a button is clicked.
+      // therfore the rest of the functionality for handling turns should go
+      // in the playerui functions
+      // Turn 2 = player
+      // turn = gameLoop( 'player', turn )
+      // // Turn 3 = ai_2
+      // turn = gameLoop( 'ai_2', turn )
+      // // Turn 4 = dealer
+      // turn = gameLoop( 'dealer', turn )
+
+
+    } else {
+      return
+    }
+    console.log(deck.length)
+    ai_1.hand.value = this.handValue( ai_1.hand )
+    ai_2.hand.value = this.handValue( ai_2.hand )
+    player.hand.value = this.handValue( player.hand )
+    dealer.hand.value = this.handValue( dealer.hand )
+    this.setState({ ai_1, ai_2, dealer, deck, player, round, turn})
   }
 
   hitItPlayer( whichPlayer ) {
