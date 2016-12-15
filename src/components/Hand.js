@@ -31,7 +31,7 @@ class Hand extends Component {
       <div className="hand">
         { cards }
         <div>
-          { this.getValue() }
+          {/* { this.getValue() } */}
         </div>
       </div>
     )

@@ -56,12 +56,12 @@ export default class App extends Component {
       hand: [],
       role: 'dealer'
     }
-    //dealer.hand.value = 0
+    dealer.hand.value = 0
 
     const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
-    //ai_1.hand.value = 0
+    ai_1.hand.value = 0
     const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
-    //ai_2.hand.value = 0
+    ai_2.hand.value = 0
 
     const player = {
       name: playerName,
@@ -69,7 +69,7 @@ export default class App extends Component {
       hand: [],
       role: 'player'
     }
-    //player.hand.value = 0
+    player.hand.value = 0
     this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
@@ -131,12 +131,18 @@ export default class App extends Component {
       return
     }
     console.log(deck.length)
+    ai_1.hand.value = this.handValue( ai_1.hand )
+    ai_2.hand.value = this.handValue( ai_2.hand )
+    player.hand.value = this.handValue( player.hand )
+    dealer.hand.value = this.handValue( dealer.hand )
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
   }
 
- hitItPlayer( whichPlayer ) {
+  hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+   console.log('--> Hand with length?', player.hand)
 
    const temp = {
      "player": player,
@@ -151,7 +157,6 @@ export default class App extends Component {
    if ( hand.length < 5 ) {
 
      hand.push( deck.shift() )
-     console.log('------> in hit ', whichPlayer)
      hand.value = this.handValue( hand )
      //NOTE: With this method I think we may be loosing the 'value' key when
      // it is put back into the state. When I add the value key to a hand
@@ -164,10 +169,11 @@ export default class App extends Component {
    else {
      return
    }
- }
+  }
 
  //TODO: Adjust handValue() function to act dynamically on the hand
- handValue( hand ) {
+  handValue( hand ) {
+
    if ( hand.length <= 0 ){ return 0 }
 
   let value = 0
@@ -175,7 +181,7 @@ export default class App extends Component {
     value += card.value
   })
   return value
- }
+  }
 
 
   showDealerCard() {
