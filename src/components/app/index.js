@@ -151,6 +151,19 @@ export default class App extends Component {
     return turn
   }
 
+  gameLoop( playerTurn, t ) {
+    let turn = t
+    if( playerTurn !== 'player' ) {
+      do {
+        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
+        else t++
+      } while ( turn === t )
+    } else {
+      // Wait for player to click a button
+    }
+    return turn
+  }
+
   testDeal() {
     let { ai_1, ai_2, dealer, deck, player, round, turn } = this.state
 
