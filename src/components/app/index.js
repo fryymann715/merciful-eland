@@ -7,15 +7,26 @@ export default class App extends Component {
   constructor( props ) {
     super(props)
     this.state = {
+      ai_1: {},
+      ai_2: {},
+      dealer: {},
       deck: [],
-      players: [],
       number_of_decks: 2,
+      player: {},
       round: 0,
       turn: 0
     }
+    this.testDeal = this.testDeal.bind( this )
+    this.setupGame = this.setupGame.bind( this )
+    this.showDealerCard = this.showDealerCard.bind( this )
+    this.hitItPlayer = this.hitItPlayer.bind( this )
   }
 
   componentDidMount() {
+    this.setupGame()
+  }
+
+  setupGame() {
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
     this.createCards(decks)
     this.createPlayers()
@@ -25,35 +36,24 @@ export default class App extends Component {
     const dealerName = 'Jeff Goldblum'
     const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
     const playerName = 'Player'
-
-    const players = []
+    const round = 0
 
     const dealer = {
       name: dealerName,
-      hands: [],
+      hand: [],
       role: 'dealer'
     }
-    players.push( dealer )
 
-    for ( let i=1; i <= 2; i++ ) {
-      const ai = {
-        name: aiNames[i],
-        bank: 100,
-        hands: [],
-        role: `ai_${i}`
-      }
-      players.push( ai )
-    }
+    const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
+    const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
 
     const player = {
       name: playerName,
       bank: 100,
-      hands: [],
-      role: 'human'
+      hand: [],
+      role: 'player'
     }
-    players.push( player )
-
-    this.setState({ players })
+    this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
   createCards(deckQuantity) {
@@ -66,7 +66,7 @@ export default class App extends Component {
       for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 13; j++) {
           let item = { face: faces[j], suit: suits[i], value: this.getValue(faces[j]), faceDown: false }
-          item.isAce = ( item.value == 255 ) ? true : false
+          item.isAce = ( item.value == 11 ) ? true : false
           cards.push(item)
         }
       }
@@ -78,6 +78,12 @@ export default class App extends Component {
 
     let merged = [].concat.apply([], decks)
     this.setState({ deck: merged })
+  }
+
+  getValue(face) {
+    if(face === 'A') return 11
+    else if(face === 'J' || face === 'Q' || face === 'K') return 10
+    else return parseInt(face)
   }
 
   shuffle(passByReference) {
@@ -92,23 +98,67 @@ export default class App extends Component {
     }
   }
 
+  testDeal() {
+    let { ai_1, ai_2, dealer, deck, player, round } = this.state
 
-  getValue(face) {
-    if(face === 'A') return 255
-    else if(face === 'J' || face === 'Q' || face === 'K') return 10
-    else return parseInt(face)
+    if ( round < 1 ) {
+      for ( let cycle = 0; cycle<2; cycle++ ) {
+        ai_1.hand.push( deck.shift() )
+        player.hand.push( deck.shift() )
+        ai_2.hand.push( deck.shift() )
+        dealer.hand.push( deck.shift() )
+        if (cycle === 0) { dealer.hand[0].faceDown = true}
+      }
+      round++
+    } else {
+      return
+    }
+    console.log(deck.length)
+    this.setState({ ai_1, ai_2, dealer, deck, player, round })
+  }
+
+ hitItPlayer() {
+
+   let { player, deck } = this.state
+   if ( this.handValue() > 21 ){ return }
+   if ( player.hand.length < 5 ) {
+
+     player.hand.push( deck.shift() )
+     console.log( this.handValue() )
+     alert( "stuff" )
+     this.setState({player, deck})
+     return
+   }
+   else {
+     return
+   }
+ }
+
+ //TODO: Adjust handValue() function to act dynamically on the hand
+ handValue() {
+    const { player } = this.state
+    let value = 0
+    player.hand.map( card => {
+      value += card.value
+    })
+    return value
+ }
+
+
+  showDealerCard() {
+    let { dealer } = this.state
+    dealer.hand[0].faceDown = false
+    this.setState({ dealer })
   }
 
   render() {
-    const deck = this.state.deck,
-          players = this.state.players,
-          round = this.state.round
+
+    const { ai_1, ai_2, dealer, deck, player, round } = this.state
 
     return (
         <div className="app">
-          <h2>APP</h2>
-          <GameTable deck={deck} players={players} round={round}/>
-          <PlayerUI />
+          <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
+          <PlayerUI testDeal={this.testDeal} reset={this.setupGame} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer}/>
         </div>
       )
   }

@@ -1,18 +1,20 @@
 import React, { PropTypes } from 'react'
 import Hand from './Hand'
 
-const Dealer = ({ name }) => {
+const Dealer = ({ hand, name }) => {
+  console.log(hand)
 
   return (
     <div className="player dealer">
       <h3> {name} </h3>
-      <Hand />
+      <Hand handArray={hand} />
     </div>
   )
 }
 
 Dealer.propTypes = {
-  name: PropTypes.string,
+  hand: PropTypes.array,
+  name: PropTypes.string
 }
 
 export default Dealer

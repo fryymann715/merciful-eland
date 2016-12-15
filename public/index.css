@@ -1,17 +1,29 @@
-/** {
-  border: solid red 1px;
-}*/
+* {
+  /*border: solid red 1px;*/
+}
 
 h1, h2, h3, h4, h5, h6 {
   margin: 0px;
   padding: 0px;
 }
 
-.ai-slot {
+.slot {
   width: 100%;
   display: flex;
-  flex-direction: row;
+  align-items: center;
+}
+
+.ai-slot {
+  flex-direction: row-reverse;;
   justify-content: space-between;
+}
+
+.player-slot {
+  justify-content: center;
+}
+
+.dealer-slot {
+  justify-content: center;
 }
 
 .app {
@@ -55,10 +67,12 @@ h1, h2, h3, h4, h5, h6 {
   border-raidus: 5px;
   margin: 2px;
   padding: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 .card.faceUp {
-  background-color: white;
+
 }
 
 .card.faceDown {
@@ -71,7 +85,7 @@ h1, h2, h3, h4, h5, h6 {
   background-color: white;
 }
 
-.card .face {
+.card.face {
   background-color: white;
 }
 
@@ -86,10 +100,11 @@ h1, h2, h3, h4, h5, h6 {
   width: 15px;
 }
 
-.serafinOn{
+.displayNormal{
   display: inline;
+  background-color: white;
 }
 
-.serafinOff{
+.displayNone{
   display: none;
 }
