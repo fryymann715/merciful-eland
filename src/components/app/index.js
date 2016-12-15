@@ -204,10 +204,29 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, round, turn})
   }
 
+  calcLocalStorage(type) {
+     = JSON.parse(localStorage.getItem(type) || '{}')
+    if (stats[type].count > 0) {
+      stats[type].count++
+    }
+    localStorage.setItem(type, JSON.stringify(player.hand, dealer.hand))
+  }
+
+  holdButton() {
+    // START AI Capture K for k-n-n
+    let holdStats = calcLocalStorage('hold')
+    // END AI
+  }
+
   hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
 
+   // START AI Capture K for k-n-n
+   let hitStats = calcLocalStorage('hit')
+   // END AI
+
+   console.log('--> Hand with length?', player.hand)
    const temp = {
      "player": player,
      "dealer": dealer,
