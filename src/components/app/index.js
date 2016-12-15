@@ -263,6 +263,63 @@ export default class App extends Component {
     // END AI
   }
 
+  aiTurn( whichAiPlayer ) {
+    choiceHit = makeChoice('hit')
+    choiceHold = makeChoice('hold')
+
+    if( choiceHit === 'hit' || choiceHold === 'hit' ) hitItPlayer( whichAiPlayer )
+    else if( choiceHit === 'hold' || choiceHold === 'hold' ) holdButton( whichAiPlayer )
+    else throw new Error("Message CM27:The subscriber you are trying to reach is unavailable or outside the calling area.")
+  }
+
+  getLocalStorage(type) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+    let holdStats = {
+      currentlyGathering: true,
+      playerHand: player.hand,
+      playerValue: this.handValue( player.hand ),
+      dealerHand: dealer.hand,
+      dealerValue: this.handValue( dealer.hand ),
+      hitOrStay: type,
+      winOrLose: 'pending'
+    }
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    stats.push( holdStats )
+    return stats
+  }
+
+  makeChoice(type) {
+    // Seek similar hands to what player had
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    let predictAction = stats.find( (ele) => {
+      if(ele.playerValue >= this.p1ofN*currPlayerValue && ele.playerValue < this.p2ofN*currPlayerValue) return ele.hitOrStay
+    })
+
+    // If unable to find similar circumstance, then guess
+    // random and adjust weights
+    if( predictAction === undefined) {
+      do {
+        this.p1ofN = Math.random()
+        this.p2ofN = Math.random()
+      } while (this.p1ofN > this.p2ofN)
+      // Store random value into database to check against later
+      predictAction = Math.random() > 0.5 ? 'hit' : 'stay'
+    }
+    return predictAction
+  }
+
+
+  holdButton( whichPlayer ) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+    // START AI Capture K for k-n-n
+    if( whichPlayer === 'player') {
+      localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
+    }
+    // END AI
+  }
+
   hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
