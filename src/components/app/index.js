@@ -16,6 +16,7 @@ export default class App extends Component {
       round: 0,
       turn: 0
     }
+    this.dealAce = this.dealAce.bind( this )
     this.hitItPlayer = this.hitItPlayer.bind( this )
     this.newRound = this.newRound.bind( this )
     this.placeBet = this.placeBet.bind( this )
@@ -37,7 +38,6 @@ export default class App extends Component {
     else {
       player.hand.bet = betAmount
       player.bank -= betAmount
-      console.log(player)
       this.setState({ player })
     }
     // console.log( "BET", betAmount )
@@ -99,6 +99,21 @@ export default class App extends Component {
     this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
+//NOTE: Dev function
+  dealAce() {
+
+    let { player, deck } = this.state
+
+    for ( let i=0; i < deck.length; i++ ){
+      if ( deck[i].value == 11 ){
+        player.hand.push( deck[i] )
+        break
+      }
+    }
+    player.hand.value = this.handValue( player.hand )
+    this.setState({ player })
+  }
+
   getValue( face ) {
     if( face === 'A' ) return 11
     else if(face === 'J' || face === 'Q' || face === 'K') return 10
@@ -110,17 +125,23 @@ export default class App extends Component {
     if ( hand.length <= 0 ){ return 0 }
 
     let value = 0
+    let hasAce = false
+
     hand.map( card => {
+
+      if( card.isAce === true ){
+        hasAce = true
+      }
       value += card.value
     })
+
+    if ( value > 21 && hasAce ) { value -= 10 }
     return value
   }
 
   hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
-
-   console.log('--> Hand with length?', player.hand)
 
    const temp = {
      "player": player,
@@ -132,25 +153,21 @@ export default class App extends Component {
    let hand = temp[ whichPlayer ].hand
 
    if ( this.handValue( hand ) >= 21 ){ return }
-   if ( hand.length < 5 ) {
 
+   if ( hand.length < 5 ) {
      hand.push( deck.shift() )
      hand.value = this.handValue( hand )
-     //NOTE: With this method I think we may be loosing the 'value' key when
-     // it is put back into the state. When I add the value key to a hand
-     // I don't see it in the state and when I try to store it and access
-     // it later its not there.
      temp[whichPlayer].hand = hand
      this.setState({ ai_1, ai_2, dealer, player, deck })
      return
    }
-   else {
-     return
-   }
+   else { return  }
+
   }
 
   newRound() {
     let { ai_1, ai_2, dealer, player, turn, round } = this.state
+
     ai_1.hand = []
     ai_2.hand = []
     dealer.hand = []
@@ -215,6 +232,7 @@ export default class App extends Component {
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
           <PlayerUI
+            dealAce={ this.dealAce }
             testDeal={ this.testDeal }
             reset={ this.newRound }
             showCard={ this.showDealerCard }

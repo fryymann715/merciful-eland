@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const PlayerUI = ({ hitItPlayer, placeBet, playerBank, playerHandValue, reset, showCard, testDeal }) => {
+const PlayerUI = ({ dealAce, hitItPlayer, placeBet, playerBank, playerHandValue, reset, showCard, testDeal }) => {
 
   const handleBet = () => {
     placeBet()
@@ -8,6 +8,10 @@ const PlayerUI = ({ hitItPlayer, placeBet, playerBank, playerHandValue, reset, s
 
   const handleDeal = () => {
     testDeal()
+  }
+
+  const handleDealAce = () => {
+    dealAce()
   }
 
   const handleHit = () => {
@@ -34,6 +38,7 @@ const PlayerUI = ({ hitItPlayer, placeBet, playerBank, playerHandValue, reset, s
 
       </div>
       <div className="controls container">
+        <button onClick={ handleDealAce }>Deal Ace</button>
         <button onClick={ handleDeal } >Deal</button>
         <button onClick={ handleReset } >RESET</button>
         <button onClick={ handleShowCard } >show dealer</button>
@@ -46,6 +51,7 @@ const PlayerUI = ({ hitItPlayer, placeBet, playerBank, playerHandValue, reset, s
 }
 
 PlayerUI.propTypes = {
+  dealAce: PropTypes.func,
   hitItPlayer: PropTypes.func,
   placeBet: PropTypes.func,
   playerBank: PropTypes.number,
