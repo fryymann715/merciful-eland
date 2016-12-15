@@ -177,6 +177,12 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, player, turn, round })
   }
 
+  playerStay() {
+    let { turn } = this.state
+    turn++
+    this.setState({ turn })
+  }
+
   setupGame() {
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
     this.createCards(decks)
@@ -199,6 +205,11 @@ export default class App extends Component {
       passByReference.deck[i - 1] = passByReference.deck[j]
       passByReference.deck[j]= x
     }
+  }
+
+  startGame() {
+    this.placeBet()
+
   }
 
   testDeal() {
