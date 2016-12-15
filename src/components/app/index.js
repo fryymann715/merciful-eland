@@ -5,7 +5,7 @@ import PlayerUI from '../PlayerUI'
 export default class App extends Component {
 
   constructor( props ) {
-    super(props)
+    super( props )
     this.state = {
       ai_1: {},
       ai_2: {},
@@ -21,6 +21,7 @@ export default class App extends Component {
     this.setupGame = this.setupGame.bind( this )
     this.showDealerCard = this.showDealerCard.bind( this )
     this.testDeal = this.testDeal.bind( this )
+    this.handValue = this.handValue.bind( this )
   }
 
   componentDidMount() {
@@ -47,7 +48,7 @@ export default class App extends Component {
   createPlayers() {
     const dealerName = 'Jeff Goldblum'
     const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
-    const playerName = prompt('What is your name?')
+    const playerName = prompt( 'What is your name?' )
     const round = 0
 
     const dealer = {
@@ -55,9 +56,15 @@ export default class App extends Component {
       hand: [],
       role: 'dealer'
     }
+    dealer.hand.value = 0
+    dealer.hand.bet = 0
 
     const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
+    ai_1.hand.value = 0
+    ai_1.hand.bet = 0
     const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
+    ai_2.hand.value = 0
+    ai_2.hand.bet = 0
 
     const player = {
       name: playerName,
@@ -65,10 +72,12 @@ export default class App extends Component {
       hand: [],
       role: 'player'
     }
+    player.hand.value = 0
+    player.hand.bet = 0
     this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
-  createCards(deckQuantity) {
+  createCards( deckQuantity ) {
     let decks = []
     for (var q = 0; q < deckQuantity; q++) {
       const cards = []
@@ -92,13 +101,13 @@ export default class App extends Component {
     this.setState({ deck: merged })
   }
 
-  getValue(face) {
-    if(face === 'A') return 11
+  getValue( face ) {
+    if( face === 'A' ) return 11
     else if(face === 'J' || face === 'Q' || face === 'K') return 10
-    else return parseInt(face)
+    else return parseInt( face )
   }
 
-  shuffle(passByReference) {
+  shuffle( passByReference ) {
     passByReference.deck = passByReference.deck || []
 
     var j, x, i
@@ -126,41 +135,57 @@ export default class App extends Component {
       return
     }
     console.log(deck.length)
-    player.hand.value = this.handValue()
+    ai_1.hand.value = this.handValue( ai_1.hand )
+    ai_2.hand.value = this.handValue( ai_2.hand )
+    player.hand.value = this.handValue( player.hand )
+    dealer.hand.value = this.handValue( dealer.hand )
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
   }
 
- hitItPlayer( whichPlayer ) {
+  hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
-   if ( this.handValue() > 21 ){ return }
-   if ( player.hand.length < 5 ) {
-     const temp = {
-       "player": player,
-       "dealer": dealer,
-       "ai_1": ai_1,
-       "ai_2": ai_2
-     }
 
-     temp[whichPlayer].hand.push( deck.shift() )
-     console.log( this.handValue() )
+   console.log('--> Hand with length?', player.hand)
+
+   const temp = {
+     "player": player,
+     "dealer": dealer,
+     "ai_1": ai_1,
+     "ai_2": ai_2
+   }
+
+   let hand = temp[ whichPlayer ].hand
+
+   if ( this.handValue( hand ) >= 21 ){ return }
+   if ( hand.length < 5 ) {
+
+     hand.push( deck.shift() )
+     hand.value = this.handValue( hand )
+     //NOTE: With this method I think we may be loosing the 'value' key when
+     // it is put back into the state. When I add the value key to a hand
+     // I don't see it in the state and when I try to store it and access
+     // it later its not there.
+     temp[whichPlayer].hand = hand
      this.setState({ ai_1, ai_2, dealer, player, deck })
      return
    }
    else {
      return
    }
- }
+  }
 
  //TODO: Adjust handValue() function to act dynamically on the hand
- handValue() {
-    const { player } = this.state
-    let value = 0
-    player.hand.map( card => {
-      value += card.value
-    })
-    return value
- }
+  handValue( hand ) {
+
+   if ( hand.length <= 0 ){ return 0 }
+
+  let value = 0
+  hand.map( card => {
+    value += card.value
+  })
+  return value
+  }
 
 
   showDealerCard() {
@@ -176,7 +201,14 @@ export default class App extends Component {
     return (
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI testDeal={this.testDeal} reset={this.newRound} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer} playerBank={player.bank} />
+          <PlayerUI
+            testDeal={this.testDeal}
+            reset={this.newRound}
+            showCard={this.showDealerCard}
+            hitItPlayer={this.hitItPlayer}
+            playerBank={player.bank}
+            playerHandValue={player.hand.value}
+          />
         </div>
       )
   }
