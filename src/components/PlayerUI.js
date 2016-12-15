@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const PlayerUI = ({ hitItPlayer, playerBank, reset, showCard, testDeal }) => {
+const PlayerUI = ({ hitItPlayer, playerBank, playerHandValue, reset, showCard, testDeal }) => {
 
   const handleDeal = () => {
     testDeal()
@@ -24,12 +24,18 @@ const PlayerUI = ({ hitItPlayer, playerBank, reset, showCard, testDeal }) => {
 
   return (
     <div className="player-ui">
-      <span className="player-bank"><h3>{playerBank}</h3></span>
-      <button onClick={ handleDeal } >Deal</button>
-      <button onClick={ handleReset } >RESET</button>
-      <button onClick={ handleShowCard } >show dealer</button>
-      <button onClick={ handleHit } >Hit</button>
-      <button onClick={ handleHitDealer }>Hit Dealer</button>
+      <div className="status container">
+        <div><span>Funds: ${playerBank}</span></div>
+        <div><span>Hand Value: {playerHandValue}</span></div>
+
+      </div>
+      <div className="controls container">
+        <button onClick={ handleDeal } >Deal</button>
+        <button onClick={ handleReset } >RESET</button>
+        <button onClick={ handleShowCard } >show dealer</button>
+        <button onClick={ handleHit } >Hit</button>
+        <button onClick={ handleHitDealer }>Hit Dealer</button>
+      </div>
     </div>
   )
 }
@@ -37,6 +43,7 @@ const PlayerUI = ({ hitItPlayer, playerBank, reset, showCard, testDeal }) => {
 PlayerUI.propTypes = {
   hitItPlayer: PropTypes.func,
   playerBank: PropTypes.number,
+  playerHandValue: PropTypes.number,
   reset: PropTypes.func,
   showCard: PropTypes.func,
   testDeal: PropTypes.func,

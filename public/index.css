@@ -7,23 +7,9 @@ h1, h2, h3, h4, h5, h6 {
   padding: 0px;
 }
 
-.slot {
-  width: 100%;
-  display: flex;
-  align-items: center;
-}
-
 .ai-slot {
   flex-direction: row-reverse;;
   justify-content: space-between;
-}
-
-.player-slot {
-  justify-content: center;
-}
-
-.dealer-slot {
-  justify-content: center;
 }
 
 .app {
@@ -33,14 +19,58 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
 }
 
-.table {
-  background-color: rgb(26, 85, 28);
-  width: 95%;
-  height: 500px;
+.card {
+  border: solid white .5px;
+  border-raidus: 5px;
+  margin: 2px;
+  padding: 10px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+}
+
+.card img {
+  width: 25px;
+  height: 25px;
+  background-color: white;
+}
+
+.card row {
+  height: 100px;
+}
+
+.card.face {
+  background-color: white;
+}
+
+.card.faceDown {
+  background-image: url("./images/spade.png")
+}
+
+.container {
   align-items: center;
+  border: solid white 2px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  margin: 5px;
+  padding: 10px;
+}
+
+.dealer-slot {
+  justify-content: center;
+}
+
+.displayNormal{
+  display: inline;
+  background-color: white;
+}
+
+.displayNone{
+  display: none;
+}
+
+.dealer {
+  order: 1;
 }
 
 .hand {
@@ -53,8 +83,8 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
 }
 
-.dealer {
-  order: 1;
+.player-slot {
+  justify-content: center;
 }
 
 .player-ui {
@@ -62,49 +92,18 @@ h1, h2, h3, h4, h5, h6 {
   background-color: lightgrey;
 }
 
-.card {
-  border: solid white .5px;
-  border-raidus: 5px;
-  margin: 2px;
-  padding: 10px;
+.slot {
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.table {
+  background-color: rgb(26, 85, 28);
+  width: 95%;
+  height: 500px;
   display: flex;
   flex-direction: column;
-}
-
-.card.faceUp {
-
-}
-
-.card.faceDown {
-  background-image: url("./images/spade.png")
-}
-
-.card img {
-  width: 25px;
-  height: 25px;
-  background-color: white;
-}
-
-.card.face {
-  background-color: white;
-}
-
-.card row {
-  height: 100px;
-}
-
-.face-down {
-  background-color: black;
-  padding: 5px;
-  height: 15px;
-  width: 15px;
-}
-
-.displayNormal{
-  display: inline;
-  background-color: white;
-}
-
-.displayNone{
-  display: none;
+  justify-content: space-between;
+  align-items: center;
 }

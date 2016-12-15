@@ -197,7 +197,14 @@ export default class App extends Component {
     return (
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI testDeal={this.testDeal} reset={this.newRound} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer} playerBank={player.bank} />
+          <PlayerUI
+            testDeal={this.testDeal} 
+            reset={this.newRound}
+            showCard={this.showDealerCard}
+            hitItPlayer={this.hitItPlayer}
+            playerBank={player.bank}
+            playerHandValue={player.hand.value}
+          />
         </div>
       )
   }
