@@ -31,18 +31,6 @@ export default class App extends Component {
     //this.doRound()
   }
 
-  placeBet() {
-    let { player } = this.state
-
-    const betAmount = prompt('How much would you like to bet?')
-    if ( betAmount > player.bank ) { return alert( "You're too broke, go home." ) }
-    else {
-      player.hand.bet = betAmount
-      player.bank -= betAmount
-      this.setState({ player })
-    }
-    // console.log( "BET", betAmount )
-  }
 
   createCards( deckQuantity ) {
     let decks = []
@@ -162,6 +150,7 @@ export default class App extends Component {
    }
 
    let hand = temp[ whichPlayer ].hand
+   if ( hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
 
    if ( this.handValue( hand ) >= 21 ){ return }
 
@@ -170,6 +159,7 @@ export default class App extends Component {
      hand.value = this.handValue( hand )
      temp[whichPlayer].hand = hand
      this.setState({ ai_1, ai_2, dealer, player, deck })
+
      return
    }
    else { return  }
@@ -179,13 +169,39 @@ export default class App extends Component {
   newRound() {
     let { ai_1, ai_2, dealer, player, turn, round } = this.state
 
+    player.bank += player.hand.bet * 2
+
     ai_1.hand = []
+    ai_1.hand.value = 0
+    ai_1.hand.bet = 0
+
     ai_2.hand = []
+    ai_2.hand.value = 0
+    ai_2.hand.bet = 0
+
     dealer.hand = []
+    dealer.hand.value = 0
+    dealer.hand.bet = 0
+
     player.hand = []
+    player.hand.value = 0
+    player.hand.bet = 0
     turn = 0
     round++
     this.setState({ ai_1, ai_2, dealer, player, turn, round })
+  }
+
+  placeBet() {
+    let { player } = this.state
+
+    const betAmount = prompt('How much would you like to bet?')
+    if ( betAmount > player.bank ) { return alert( "You're too broke, go home." ) }
+    else {
+      player.hand.bet = parseInt(betAmount)
+      player.bank -= betAmount
+      this.setState({ player })
+    }
+    // console.log( "BET", betAmount )
   }
 
   playerStay() {
@@ -225,6 +241,8 @@ export default class App extends Component {
 
   testDeal() {
     let { ai_1, ai_2, dealer, deck, player, turn } = this.state
+
+    if ( player.hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
 
     if ( turn < 1 ) {
       for ( let cycle = 0; cycle<2; cycle++ ) {
