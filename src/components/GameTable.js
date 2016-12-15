@@ -4,6 +4,13 @@ import Dealer from './Dealer'
 
 const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
+  // const showValue = () => {
+  //   if ( dealer.hand.value ){
+  //     return dealer.hand.value
+  //   } else {
+  //     return 0
+  //   }
+  // }
 
 
   return (
@@ -11,6 +18,7 @@ const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
       <div className="slot dealer-slot">
         <Dealer name={ dealer.name } hand={ dealer.hand }/>
+        {/* <span>VALUE: {showValue()}</span> */}
       </div>
 
       <div className="slot ai-slot">
