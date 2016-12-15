@@ -172,7 +172,8 @@ export default class App extends Component {
 
   makeChoice(type) {
     // Seek similar hands to what player had
-    let predictAction = getLocalStorage(type).find( (ele) => {
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    let predictAction = stats.find( (ele) => {
       if(ele.playerValue >= p1ofN*currPlayerValue && ele.playerValue < p2ofN*currPlayerValue) return ele.hitOrStay
     })
 
