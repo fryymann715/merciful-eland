@@ -130,15 +130,21 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
   }
 
- hitItPlayer() {
+ hitItPlayer( whichPlayer ) {
 
-   let { player, deck } = this.state
+   let { ai_1, ai_2, dealer, player, deck } = this.state
    if ( this.handValue() > 21 ){ return }
    if ( player.hand.length < 5 ) {
+     const temp = {
+       "player": player,
+       "dealer": dealer,
+       "ai_1": ai_1,
+       "ai_2": ai_2
+     }
 
-     player.hand.push( deck.shift() )
+     temp[whichPlayer].hand.push( deck.shift() )
      console.log( this.handValue() )
-     this.setState({player, deck})
+     this.setState({ ai_1, ai_2, dealer, player, deck })
      return
    }
    else {
