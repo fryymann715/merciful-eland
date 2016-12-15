@@ -6,6 +6,7 @@ class Hand extends Component {
     super( props )
   }
 
+  // FIXME: value does not minus 10 if hand has an ace.
   getValue() {
     const { handArray } = this.props
 
