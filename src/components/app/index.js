@@ -13,13 +13,14 @@ export default class App extends Component {
       deck: [],
       number_of_decks: 2,
       player: {},
-      round: 0,
+      round: 1,
       turn: 0
     }
-    this.testDeal = this.testDeal.bind( this )
+    this.hitItPlayer = this.hitItPlayer.bind( this )
+    this.newRound = this.newRound.bind( this )
     this.setupGame = this.setupGame.bind( this )
     this.showDealerCard = this.showDealerCard.bind( this )
-    this.hitItPlayer = this.hitItPlayer.bind( this )
+    this.testDeal = this.testDeal.bind( this )
   }
 
   componentDidMount() {
@@ -32,15 +33,26 @@ export default class App extends Component {
     this.createPlayers()
   }
 
+  newRound() {
+    let { ai_1, ai_2, dealer, player, turn, round } = this.state
+    ai_1.hand = []
+    ai_2.hand = []
+    dealer.hand = []
+    player.hand = []
+    turn = 0
+    round++
+    this.setState({ ai_1, ai_2, dealer, player, turn, round })
+  }
+
   createPlayers() {
     const dealerName = 'Jeff Goldblum'
     const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
-    const playerName = 'Player'
+    const playerName = prompt('What is your name?')
     const round = 0
 
     const dealer = {
       name: dealerName,
-      hand: [],
+      hand: { cards: [], value: 0, currentBet: 0 },
       role: 'dealer'
     }
 
@@ -99,9 +111,9 @@ export default class App extends Component {
   }
 
   testDeal() {
-    let { ai_1, ai_2, dealer, deck, player, round } = this.state
+    let { ai_1, ai_2, dealer, deck, player, turn } = this.state
 
-    if ( round < 1 ) {
+    if ( turn < 1 ) {
       for ( let cycle = 0; cycle<2; cycle++ ) {
         ai_1.hand.push( deck.shift() )
         player.hand.push( deck.shift() )
@@ -109,12 +121,12 @@ export default class App extends Component {
         dealer.hand.push( deck.shift() )
         if (cycle === 0) { dealer.hand[0].faceDown = true}
       }
-      round++
+      turn = 1
     } else {
       return
     }
     console.log(deck.length)
-    this.setState({ ai_1, ai_2, dealer, deck, player, round })
+    this.setState({ ai_1, ai_2, dealer, deck, player, turn })
   }
 
  hitItPlayer() {
@@ -125,7 +137,6 @@ export default class App extends Component {
 
      player.hand.push( deck.shift() )
      console.log( this.handValue() )
-     alert( "stuff" )
      this.setState({player, deck})
      return
    }
@@ -158,7 +169,7 @@ export default class App extends Component {
     return (
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI testDeal={this.testDeal} reset={this.setupGame} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer}/>
+          <PlayerUI testDeal={this.testDeal} reset={this.newRound} showCard={this.showDealerCard} hitItPlayer={this.hitItPlayer} playerBank={player.bank}/>
         </div>
       )
   }

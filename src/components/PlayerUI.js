@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const PlayerUI = ({ testDeal, reset, showCard, hitItPlayer }) => {
+const PlayerUI = ({ hitItPlayer, playerBank, reset, showCard, testDeal }) => {
 
   const handleDeal = () => {
     testDeal()
@@ -16,6 +16,7 @@ const PlayerUI = ({ testDeal, reset, showCard, hitItPlayer }) => {
 
   return (
     <div className="player-ui">
+      <span className="player-bank">{playerBank}</span>
       <button onClick={ handleDeal } >Deal</button>
       <button onClick={ handleReset } >RESET</button>
       <button onClick={ handleShowCard } >show dealer</button>
@@ -25,10 +26,11 @@ const PlayerUI = ({ testDeal, reset, showCard, hitItPlayer }) => {
 }
 
 PlayerUI.propTypes = {
-  testDeal: PropTypes.func,
+  hitItPlayer: PropTypes.func,
+  playerBank: PropTypes.number,
   reset: PropTypes.func,
   showCard: PropTypes.func,
-  hitItPlayer: PropTypes.func
+  testDeal: PropTypes.func,
 }
 
 export default PlayerUI
