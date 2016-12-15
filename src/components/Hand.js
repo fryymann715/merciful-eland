@@ -13,6 +13,7 @@ class Hand extends Component {
 
     return (
       <div className="hand">
+        <span className="hand-bet"><h5>BET: { handArray.bet }</h5></span>
         { cards }
       </div>
     )
