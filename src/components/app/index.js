@@ -6,6 +6,8 @@ export default class App extends Component {
 
   constructor( props ) {
     super( props )
+    this.p1ofN = 0.14
+    this.p2ofN = 0.74
     this.state = {
       ai_1: {},
       ai_2: {},
@@ -205,16 +207,12 @@ export default class App extends Component {
   }
 
   aiTurn( whichAiPlayer ) {
-    let holdStats = getLocalStorage('hold')
-    let hitStats = getLocalStorage('hitStats')
+    choiceHit = makeChoice('hit')
+    choiceHold = makeChoice('hold')
 
-
-
-    if () {
-      hitItPlayer( whichAiPlayer )
-    } else {
-      // skip turn by doing nothing. We're holding.
-    }
+    if( choiceHit === 'hit' || choiceHold === 'hit' ) hitItPlayer( whichAiPlayer )
+    else if( choiceHit === 'hold' || choiceHold === 'hold' ) holdButton( whichAiPlayer )
+    else throw new Error("Message CM27:The subscriber you are trying to reach is unavailable or outside the calling area.")
   }
 
   getLocalStorage(type) {
@@ -236,16 +234,16 @@ export default class App extends Component {
     // Seek similar hands to what player had
     let stats = JSON.parse(localStorage.getItem(type) || '[]')
     let predictAction = stats.find( (ele) => {
-      if(ele.playerValue >= p1ofN*currPlayerValue && ele.playerValue < p2ofN*currPlayerValue) return ele.hitOrStay
+      if(ele.playerValue >= this.p1ofN*currPlayerValue && ele.playerValue < this.p2ofN*currPlayerValue) return ele.hitOrStay
     })
 
     // If unable to find similar circumstance, then guess
     // random and adjust weights
     if( predictAction === undefined) {
       do {
-        p1ofN = Math.random()
-        p2ofN = Math.random()
-      } while (p1ofN > p2ofN)
+        this.p1ofN = Math.random()
+        this.p2ofN = Math.random()
+      } while (this.p1ofN > this.p2ofN)
       // Store random value into database to check against later
       predictAction = Math.random() > 0.5 ? 'hit' : 'stay'
     }
@@ -253,11 +251,13 @@ export default class App extends Component {
   }
 
 
-  holdButton() {
+  holdButton( whichPlayer ) {
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
     // START AI Capture K for k-n-n
-    localStorage.setItem('hold', JSON.stringify( getLocalStorage('hold') ))
+    if( whichPlayer === 'player') {
+      localStorage.setItem('hold', JSON.stringify( getLocalStorage('hold') ))
+    }
     // END AI
   }
 
@@ -266,7 +266,9 @@ export default class App extends Component {
    let { ai_1, ai_2, dealer, player, deck } = this.state
 
    // START AI Capture K for k-n-n
-   localStorage.setItem('hit', JSON.stringify( getLocalStorage('hit') ))
+   if( whichPlayer === 'player') {
+     localStorage.setItem('hit', JSON.stringify( getLocalStorage('hit') ))
+   }
    // END AI
 
    console.log('--> Hand with length?', player.hand)
