@@ -6,8 +6,6 @@ import spade from '../../public/images/spade.png'
 
 const Card = ({ face, suit, faceDown }) => {
 
-
-
   const classString = (str) => {
 
     const hideOnTrue = faceDown ? "displayNone" : "displayNormal"
