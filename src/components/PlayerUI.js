@@ -52,10 +52,10 @@ const PlayerUI = ({ betString,
   }
 
   const dealAceButton = <button onClick={ handleDealAce }>Deal Ace</button>
-  const dealButton = (player.hand.length > 0) ? <span></span> :  <button onClick={ handleDeal } >Deal</button>
+  const dealButton = (player.hand.length > 0) ? <span className="displayNone"></span> :  <button onClick={ handleDeal } >Deal</button>
   const resetButton = <button onClick={ handleReset } >RESET</button>
   const showCardButton = <button onClick={ handleShowCard } >show dealer</button>
-  const hitButton = <button onClick={ handleHit } >Hit</button>
+  const hitButton = (player.hand.value < 21 /*TODO: Get turn value from App, check if === 2*/) ? <button onClick={ handleHit } >Hit</button> : <span className="displayNone"></span>
   const playerHold = <button onClick={ handleHold } >Hold</button>
 
   return (

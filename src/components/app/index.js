@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
+import * as types from '../../resources'
 import { CardGenerator, PlayerSetup, PlayerFunctions } from '../compartments/index'
 
 export default class App extends Component {
-
   constructor( props ) {
     super( props )
     this.p1ofN = 0.14
@@ -48,7 +48,6 @@ export default class App extends Component {
   }
 
   doHit( whichPlayer ) {
-
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
     if( whichPlayer === 'player') {
@@ -66,6 +65,9 @@ export default class App extends Component {
     let result = PlayerFunctions.hitItPlayer({ deck, hand })
     temp[ whichPlayer ].hand = result.hand
 
+    let handStatus = this.checkHandStatus( result.hand )
+    console.log("Hand Status", handStatus )
+
     this.setState({ ai_1, ai_2, dealer, player, deck: result.deck })
   }
 
@@ -77,6 +79,12 @@ export default class App extends Component {
       this.placeBet()
     }
 
+  }
+
+  checkHandStatus( hand ) {
+    if ( hand.value === 21 ){ return types.TWENTY_1 }
+    else if ( hand.value > 21 ){ return types.BUST }
+    else { return types.NORM }
   }
 
   gameLoop( playerTurn, t ) {
@@ -123,6 +131,7 @@ export default class App extends Component {
     return stats
   }
 
+//NOTE: Mulitple holdButton
   holdButton( whichPlayer ) {
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
@@ -150,6 +159,7 @@ export default class App extends Component {
     return stats
   }
 
+//NOTE: Multiple holdButton
   holdButton() {
     let { turn } = this.state
     // TODO: disable player UI

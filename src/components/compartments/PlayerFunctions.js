@@ -36,15 +36,16 @@ const PlayerFunctions = {
     if ( hand.length < 5 ) {
       hand.push( deck.shift() )
       hand.value = PlayerFunctions.handValue( hand )
+      if( hand.value > 21 ) hand.busted = true
       return { deck, hand }
     }
-    else { return  }
+    else { return }
 
  },
 
   playerBet: ( player, betString ) => {
 
-    let betAmount = parseInt( betString ) 
+    let betAmount = parseInt( betString )
     if ( betAmount > player.bank ) { return alert( "You're too broke, go home." ) }
     if ( isNaN( betAmount ) ){ return alert("Numbers please...") }
     else {
