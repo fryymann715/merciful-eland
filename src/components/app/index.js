@@ -53,7 +53,6 @@ export default class App extends Component {
     if( whichPlayer === 'player') {
      localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
     }
-
     const temp = {
     "player": player,
     "dealer": dealer,
@@ -81,15 +80,29 @@ export default class App extends Component {
 
   gameLoop( playerTurn, t ) {
     let turn = t
+
+    const { ai_1, ai_2, dealer, player } = this.state
+    const players = {
+      "player": player,
+      "dealer": dealer,
+      "ai_1": ai_1,
+      "ai_2": ai_2
+    }
+    let playerUp = players[ playerTurn ]
+
     if( playerTurn !== 'player' ) {
       do {
-        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
+        if ( playerUp.hand.bet === 0 ){ this.makeBet( 20, playerUp ) }
+        if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
+          // TODO: Have Bob Ross actually bet (his soul)
+          this.doHit(playerTurn)
+        }
         else t++
       } while ( turn === t )
     } else {
       // Wait for player to click a button
     }
-    return turn
+    this.setState({turn})
   }
 
   getLocalStorage(type) {
@@ -98,9 +111,9 @@ export default class App extends Component {
     let holdStats = {
       currentlyGathering: true,
       playerHand: player.hand,
-      playerValue: this.handValue( player.hand ),
+      playerValue: PlayerFunctions.handValue( player.hand ),
       dealerHand: dealer.hand,
-      dealerValue: this.handValue( dealer.hand ),
+      dealerValue: PlayerFunctions.handValue( dealer.hand ),
       hitOrStay: type,
       winOrLose: 'pending'
     }
@@ -136,9 +149,10 @@ export default class App extends Component {
     return stats
   }
 
-  makeBet() {
-    let { player, betString } = this.state
-    let updatedPlayer = PlayerFunctions.playerBet( player, betString )
+  makeBet( amount = 'none', playerUp = 'none' ) {
+    let betString = ( amount === 'none' ) ? this.state.betString : amount
+    let playa = ( playerUp === 'none' ) ? this.state.player : playerUp
+    let updatedPlayer = PlayerFunctions.playerBet( playa, betString )
     this.setState({ updatedPlayer, betString: '' })
   }
 
@@ -175,7 +189,7 @@ export default class App extends Component {
     ai_2.hand.value = 0
     ai_2.hand.bet = 0
 
-    betString = ''
+    let betString = ''
 
     dealer.hand = []
     dealer.hand.value = 0
@@ -206,6 +220,10 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
   }
 
+
+
+
+
   deal() {
     let { ai_1, ai_2, dealer, deck, player, turn } = this.state
 
@@ -219,16 +237,27 @@ export default class App extends Component {
         dealer.hand.push( deck.shift() )
         if (cycle === 0) { dealer.hand[0].faceDown = true}
       }
+
       turn = 1
     } else {
       return
     }
     console.log(deck.length)
-    ai_1.hand.value = this.handValue( ai_1.hand )
-    ai_2.hand.value = this.handValue( ai_2.hand )
-    player.hand.value = this.handValue( player.hand )
-    dealer.hand.value = this.handValue( dealer.hand )
+    ai_1.hand.value = PlayerFunctions.handValue( ai_1.hand )
+    ai_2.hand.value = PlayerFunctions.handValue( ai_2.hand )
+    player.hand.value = PlayerFunctions.handValue( player.hand )
+    dealer.hand.value = PlayerFunctions.handValue( dealer.hand )
+
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
+
+    // Disable player UI while player 1 is going
+
+    // Turn 1 = ai_1
+    this.gameLoop( 'ai_1', turn )
+
+    // Enable player controls
+
+
   }
 
   render() {
