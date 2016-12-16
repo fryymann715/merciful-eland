@@ -53,7 +53,6 @@ export default class App extends Component {
     if( whichPlayer === 'player') {
      localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
     }
-
     const temp = {
     "player": player,
     "dealer": dealer,
@@ -83,19 +82,20 @@ export default class App extends Component {
     let turn = t
 
     const { ai_1, ai_2, dealer, player } = this.state
-    const temp = {
+    const players = {
       "player": player,
       "dealer": dealer,
       "ai_1": ai_1,
       "ai_2": ai_2
     }
-    let theHand = temp[playerTurn].hand
+    let playerUp = players[ playerTurn ]
 
     if( playerTurn !== 'player' ) {
       do {
-        if( PlayerFunctions.handValue( theHand ) <= 17 ) {
+        if ( playerUp.hand.bet === 0 ){ this.makeBet( 20, playerUp ) }
+        if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
           // TODO: Have Bob Ross actually bet (his soul)
-          //this.doHit(playerTurn)
+          this.doHit(playerTurn)
         }
         else t++
       } while ( turn === t )
@@ -149,9 +149,10 @@ export default class App extends Component {
     return stats
   }
 
-  makeBet() {
-    let { player, betString } = this.state
-    let updatedPlayer = PlayerFunctions.playerBet( player, betString )
+  makeBet( amount = 'none', playerUp = 'none' ) {
+    let betString = ( amount === 'none' ) ? this.state.betString : amount
+    let playa = ( playerUp === 'none' ) ? this.state.player : playerUp
+    let updatedPlayer = PlayerFunctions.playerBet( playa, betString )
     this.setState({ updatedPlayer, betString: '' })
   }
 
