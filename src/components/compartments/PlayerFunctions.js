@@ -33,10 +33,6 @@ const PlayerFunctions = {
 
   hitItPlayer: ({ deck, hand }) => {
 
-
-
-
-
     if ( hand.length < 5 ) {
       hand.push( deck.shift() )
       hand.value = PlayerFunctions.handValue( hand )
@@ -46,9 +42,9 @@ const PlayerFunctions = {
 
  },
 
-  playerBet: ( player ) => {
+  playerBet: ( player, betString ) => {
 
-    let betAmount = prompt('How much would you like to bet?')
+    let betAmount = parseInt( betString ) 
     if ( betAmount > player.bank ) { return alert( "You're too broke, go home." ) }
     if ( isNaN( betAmount ) ){ return alert("Numbers please...") }
     else {
