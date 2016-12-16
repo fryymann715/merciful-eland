@@ -1,5 +1,5 @@
 
-const testyModule = {
+const CardGenerator = {
 
   getValue: ( face ) => {
     if( face === 'A' ) return 11
@@ -18,6 +18,7 @@ const testyModule = {
       passByReference.deck[j]= x
     }
   },
+  
 
   createCards: ( deckQuantity ) => {
     let decks = []
@@ -28,14 +29,14 @@ const testyModule = {
 
       for (var i = 0; i < 4; i++) {
         for (var j = 0; j < 13; j++) {
-          let item = { face: faces[j], suit: suits[i], value: testyModule.getValue(faces[j]), faceDown: false }
+          let item = { face: faces[j], suit: suits[i], value: CardGenerator.getValue(faces[j]), faceDown: false }
           item.isAce = ( item.value == 11 ) ? true : false
           cards.push(item)
         }
       }
 
       let passByReference = {deck: cards}
-      testyModule.shuffle(passByReference)
+      CardGenerator.shuffle(passByReference)
       decks.push(cards)
     }
 
@@ -46,4 +47,4 @@ const testyModule = {
 
 }
 
-export default testyModule
+export default CardGenerator

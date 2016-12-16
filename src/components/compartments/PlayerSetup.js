@@ -1,7 +1,11 @@
-const obj = {
+import * as names from '../../resources'
+
+const PlayerSetup = {
+
   createPlayers: () => {
-    const dealerName = 'Jeff Goldblum'
-    const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
+
+    const dealerName = names.DEALER_NAME
+    const aiNames = [ names.AI_1_NAME, names.AI_2_NAME ]
     const playerName = prompt( 'What is your name?' )
     const round = 0
 
@@ -16,6 +20,7 @@ const obj = {
     const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
     ai_1.hand.value = 0
     ai_1.hand.bet = 0
+
     const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
     ai_2.hand.value = 0
     ai_2.hand.bet = 0
@@ -28,8 +33,10 @@ const obj = {
     }
     player.hand.value = 0
     player.hand.bet = 0
-    return { dealer, ai_1, ai_2, player, round } 
+
+    return { dealer, ai_1, ai_2, player, round }
   }
+
 }
 
-export default obj
+export default PlayerSetup
