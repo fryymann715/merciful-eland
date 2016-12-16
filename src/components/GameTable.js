@@ -1,6 +1,7 @@
 import React, { PropTypes } from 'react'
 import Player from './Player'
 import Dealer from './Dealer'
+import gamelogo from '../../public/images/gamelogo.png'
 
 const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
@@ -15,7 +16,6 @@ const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
   return (
     <div className="table">
-
       <div className="slot dealer-slot">
         <Dealer name={ dealer.name } hand={ dealer.hand }/>
         {/* <span>VALUE: {showValue()}</span> */}

@@ -19,6 +19,9 @@ h1, h2, h3, h4, h5, h6 {
   align-items: center;
 }
 
+.button {
+
+}
 .card {
   border: solid white .5px;
   border-radius: 5px;
@@ -30,11 +33,10 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
 }
 
-.card img {
+/*.card img {
   /*width: 25px;
   height: 25px;*/
-  background-color: white;
-}
+}*/
 
 .card row {
   /*height: 100px;*/
@@ -42,10 +44,18 @@ h1, h2, h3, h4, h5, h6 {
 
 .card.face {
   background-color: white;
+  background-image: url("./images/spade.png")
+  background-size: 90%;
+  background-repeat: no-repeat;
+  background-position: center;*/
 }
 
 .card.faceDown {
-  background-image: url("./images/spade.png")
+  /*background-image: url("./images/spade.png")*/
+  background-image: url('https://s24.postimg.org/yk4rcl2qt/images.jpg');
+  background-size: 90%;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .container {
@@ -83,6 +93,7 @@ h1, h2, h3, h4, h5, h6 {
 .player {
   display: flex;
   flex-direction: column;
+  padding: 50px;
 }
 
 .player-slot {
@@ -91,7 +102,8 @@ h1, h2, h3, h4, h5, h6 {
 
 .player-ui {
   width: 80%;
-  background-color: lightgrey;
+  background-color: #1d3542;
+  color: white;
 }
 
 .slot {
@@ -108,4 +120,14 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
+  background-image: url('https://s27.postimg.org/751qujf8j/Game_Page_BJ_Main_1461050691624_tcm1582_294463.jpg');
+  background-repeat: no-repeat;
+  background-position: right;
+  background-size: 100%;
+  border-style: inset;
+  border-width: 2px;
+  border-color: black;
+  margin-top:100px;
+  /*border-image-source: url('https://s27.postimg.org/xhl5spu3n/image.jpg');
+  border-image-repeat: repeat;*/
 }
