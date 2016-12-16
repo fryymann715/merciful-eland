@@ -11,6 +11,7 @@ const PlayerUI = ({ betString,
                     playerHandValue,
                     reset,
                     showCard,
+                    turn,
                     deal }) => {
 
   const handleBet = () => {
@@ -51,12 +52,14 @@ const PlayerUI = ({ betString,
     }
   }
 
+const empty = <span className="displayNone"></span>
+
   const dealAceButton = <button onClick={ handleDealAce }>Deal Ace</button>
-  const dealButton = (player.hand.length > 0) ? <span className="displayNone"></span> :  <button onClick={ handleDeal } >Deal</button>
+  const dealButton = (player.hand.length > 0) ? empty :  <button onClick={ handleDeal } >Deal</button>
   const resetButton = <button onClick={ handleReset } >RESET</button>
   const showCardButton = <button onClick={ handleShowCard } >show dealer</button>
-  const hitButton = (player.hand.value < 21 /*TODO: Get turn value from App, check if === 2*/) ? <button onClick={ handleHit } >Hit</button> : <span className="displayNone"></span>
-  const playerHold = <button onClick={ handleHold } >Hold</button>
+  const hitButton = (player.hand.value < 21 && turn === 2) ? <button onClick={ handleHit } >Hit</button> : empty
+  const playerHold = (turn === 2) ? <button onClick={ handleHold } >Hold</button> : empty
 
   return (
     <div className="player-ui">
@@ -94,7 +97,8 @@ PlayerUI.propTypes = {
   playerBank: PropTypes.number,
   playerHandValue: PropTypes.number,
   reset: PropTypes.func,
-  showCard: PropTypes.func
+  showCard: PropTypes.func,
+  turn: PropTypes.number
 }
 
 export default PlayerUI

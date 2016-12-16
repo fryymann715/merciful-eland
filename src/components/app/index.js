@@ -48,7 +48,7 @@ export default class App extends Component {
   }
 
   doHit( whichPlayer ) {
-    let { ai_1, ai_2, dealer, player, deck } = this.state
+    let { ai_1, ai_2, dealer, player, deck, turn } = this.state
 
     if( whichPlayer === 'player') {
      localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
@@ -60,13 +60,17 @@ export default class App extends Component {
     "ai_2": ai_2
     }
     let hand = temp[ whichPlayer ].hand
-    if ( hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
+    if ( hand.bet <= 0 && whichPlayer !== 'dealer' ){ return alert( "You must first place a bet." ) }
     if ( PlayerFunctions.handValue( hand ) >= 21 ){ return }
     let result = PlayerFunctions.hitItPlayer({ deck, hand })
     temp[ whichPlayer ].hand = result.hand
 
     let handStatus = this.checkHandStatus( result.hand )
     console.log("Hand Status", handStatus )
+    debugger
+    if( handStatus === types.BUST || handStatus === types.TWENTY_1 ) {
+      this.endTurn()
+    }
 
     this.setState({ ai_1, ai_2, dealer, player, deck: result.deck })
   }
@@ -99,11 +103,15 @@ export default class App extends Component {
     }
     let playerUp = players[ playerTurn ]
 
-    if( playerTurn !== 'player' ) {
+    if( playerTurn === 'dealer' ) {
+      if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
+        this.doHit(playerTurn)
+      }
+    }
+    else if( playerTurn !== 'player' ) {
       do {
         if ( playerUp.hand.bet === 0 ){ this.makeBet( 20, playerUp ) }
         if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
-          // TODO: Have Bob Ross actually bet (his soul)
           this.doHit(playerTurn)
         }
         else t++
@@ -132,15 +140,15 @@ export default class App extends Component {
   }
 
 //NOTE: Mulitple holdButton
-  holdButton( whichPlayer ) {
-    let { ai_1, ai_2, dealer, player, deck } = this.state
-
-    // START AI Capture K for k-n-n
-    if( whichPlayer === 'player') {
-      localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
-    }
-    // END AI
-  }
+  // holdButton( whichPlayer ) {
+  //   let { ai_1, ai_2, dealer, player, deck } = this.state
+  //
+  //   // START AI Capture K for k-n-n
+  //   if( whichPlayer === 'player') {
+  //     localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
+  //   }
+  //   // END AI
+  // }
 
   getLocalStorage(type) {
     let { ai_1, ai_2, dealer, player, deck } = this.state
@@ -160,12 +168,21 @@ export default class App extends Component {
   }
 
 //NOTE: Multiple holdButton
-  holdButton() {
+  endTurn() {
     let { turn } = this.state
     // TODO: disable player UI
     turn++
 
+    if( turn > 2) {// Do AI stuff}
+      this.gameLoop( 'ai_2', turn )
+      this.gameLoop( 'dealer', turn )
+    }
+
     this.setState({ turn })
+  }
+
+  holdButton() {
+    this.endTurn()
   }
 
   makeBet( amount = 'none', playerUp = 'none' ) {
@@ -277,7 +294,7 @@ export default class App extends Component {
 
   render() {
 
-    const { ai_1, ai_2, dealer, deck, player, round } = this.state
+    const { ai_1, ai_2, dealer, deck, player, round, turn } = this.state
 
     return (
         <div className="app">
@@ -288,6 +305,7 @@ export default class App extends Component {
             dealAce={ this.dealAce }
             doHit={ this.doHit }
             holdButton={ this.holdButton }
+            turn={ turn }
             onChange={ this.onChange }
             placeBet={ this.makeBet }
             player={ player }
