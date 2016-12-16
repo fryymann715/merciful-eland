@@ -5,7 +5,7 @@ const Player = ({ name, hand }) => {
 
   return (
     <div className="player" >
-      <h3> { name } </h3>
+      <h3 className="player-name"> { name } </h3>
       <Hand handArray={ hand } />
     </div>
   )

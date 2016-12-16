@@ -44,7 +44,10 @@ const PlayerUI = ({ dealAce, doHit, placeBet, playerBank, playerHandValue, reset
         <button onClick={ handleShowCard } >show dealer</button>
         <button onClick={ handleHit } >Hit</button>
         <button onClick={ handleHitDealer }>Hit Dealer</button>
-        <button onClick={ handleBet }>Bet</button>
+        <div className="bet container">
+          <input placeHolder="bet amount"></input>
+          <button onClick={ handleBet }>Bet</button>
+        </div>
       </div>
     </div>
   )

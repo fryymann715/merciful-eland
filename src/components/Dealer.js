@@ -4,7 +4,7 @@ import Hand from './Hand'
 const Dealer = ({ hand, name }) => {
   return (
     <div className="player dealer">
-      <h3> {name} </h3>
+      <h3 className="player-name"> {name} </h3>
       <Hand handArray={hand} />
     </div>
   )
