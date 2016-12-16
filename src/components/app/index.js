@@ -176,6 +176,7 @@ export default class App extends Component {
     if( turn > 2) {// Do AI stuff}
       this.gameLoop( 'ai_2', turn )
       this.gameLoop( 'dealer', turn )
+      this.settleRound()
     }
 
     this.setState({ turn })
@@ -215,8 +216,6 @@ export default class App extends Component {
   newRound() {
     let { ai_1, ai_2, dealer, player, turn, round } = this.state
 
-    player.bank += player.hand.bet * 2
-
     ai_1.hand = []
     ai_1.hand.value = 0
     ai_1.hand.bet = 0
@@ -254,6 +253,38 @@ export default class App extends Component {
     const deck = CardGenerator.createCards( decks )
     const { dealer, ai_1, ai_2, player, round } = PlayerSetup.createPlayers()
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
+  }
+
+  settleRound() {
+    let { dealer, player, ai_1, ai_2 } = this.state
+    const list = [ai_1, player, ai_2]
+    for (var i = 0; i < 3; i++) {
+      let selectedHand = list[i].hand
+
+      // TODO: name result something better
+      let result = this.checkHandStatus( selectedHand )
+
+      // LOSE CONDITIONS:
+      if( result === types.BUST || selectedHand.value < dealer.hand.value ) {
+        console.log("Player ", list[i].name, " eats vast quantities of 💩.")
+        // Player banks left alone
+
+      // WIN CONDITIONS:
+      } else if ( dealer.hand.value > 21
+      || (result === types.TWENTY_1 || selectedHand.value > dealer.hand.value )
+      && dealer.hand.value !== selectedHand.value) {
+
+        console.log("Player ", list[i].name, " WON!!!")
+        list[i].bank += selectedHand.bet * 2
+
+      // PUSH CONDITIONS:
+      } else {
+        console.log(list[i].name + " pushed...like a chump...")
+        list[i].bank += selectedHand.bet
+      }
+      // END OF CONDITION CHECKING
+
+    }
   }
 
   deal() {
