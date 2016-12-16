@@ -1,6 +1,6 @@
 import React, { PropTypes } from 'react'
 
-const PlayerUI = ({ dealAce, hitItPlayer, placeBet, playerBank, playerHandValue, reset, showCard, testDeal }) => {
+const PlayerUI = ({ dealAce, doHit, placeBet, playerBank, playerHandValue, reset, showCard, testDeal }) => {
 
   const handleBet = () => {
     placeBet()
@@ -15,11 +15,11 @@ const PlayerUI = ({ dealAce, hitItPlayer, placeBet, playerBank, playerHandValue,
   }
 
   const handleHit = () => {
-    hitItPlayer("player")
+    doHit("player")
   }
 
   const handleHitDealer = () => {
-    hitItPlayer("dealer")
+    doHit("dealer")
   }
 
   const handleReset = () => {
@@ -52,7 +52,7 @@ const PlayerUI = ({ dealAce, hitItPlayer, placeBet, playerBank, playerHandValue,
 
 PlayerUI.propTypes = {
   dealAce: PropTypes.func,
-  hitItPlayer: PropTypes.func,
+  doHit: PropTypes.func,
   placeBet: PropTypes.func,
   playerBank: PropTypes.number,
   playerHandValue: PropTypes.number,
