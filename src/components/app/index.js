@@ -3,10 +3,6 @@ import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
 import { CardGenerator, PlayerSetup, PlayerFunctions } from '../compartments/index'
 
-
-
-// import PlayerFunctions
-
 export default class App extends Component {
 
   constructor( props ) {
@@ -17,6 +13,7 @@ export default class App extends Component {
     this.state = {
       ai_1: {},
       ai_2: {},
+      betString: '',
       dealer: {},
       deck: [],
       number_of_decks: 2,
@@ -29,16 +26,16 @@ export default class App extends Component {
     this.doHit = this.doHit.bind( this )
     this.makeBet = this.makeBet.bind( this )
     this.newRound = this.newRound.bind( this )
+    this.onChange = this.onChange.bind( this )
     this.playerBet = PlayerFunctions.playerBet.bind( this )
     this.setupGame = this.setupGame.bind( this )
     this.showDealerCard = PlayerFunctions.showDealerCard.bind( this )
-    this.testDeal = this.testDeal.bind( this )
+    this.deal = this.deal.bind( this )
   }
 
   componentDidMount() {
     this.setupGame()
   }
-//-------------------------------------
 
   aiTurn( whichAiPlayer ) {
     choiceHit = makeChoice('hit')
@@ -74,7 +71,7 @@ export default class App extends Component {
 
   doRound() {
     // let { turn } = this.state
-    if( this.state.turn < 1 ){ this.testDeal() }
+    if( this.state.turn < 1 ){ this.deal() }
 
     else if( this.state.turn == 1 ) {
       this.placeBet()
@@ -140,10 +137,9 @@ export default class App extends Component {
   }
 
   makeBet() {
-    let { player } = this.state
-    let updatedPlayer = PlayerFunctions.playerBet( player )
-    this.setState({ updatedPlayer })
-
+    let { player, betString } = this.state
+    let updatedPlayer = PlayerFunctions.playerBet( player, betString )
+    this.setState({ updatedPlayer, betString: '' })
   }
 
   makeChoice(type) {
@@ -179,6 +175,8 @@ export default class App extends Component {
     ai_2.hand.value = 0
     ai_2.hand.bet = 0
 
+    betString = ''
+
     dealer.hand = []
     dealer.hand.value = 0
     dealer.hand.bet = 0
@@ -188,7 +186,11 @@ export default class App extends Component {
     player.hand.bet = 0
     turn = 0
     round++
-    this.setState({ ai_1, ai_2, dealer, player, turn, round })
+    this.setState({ ai_1, ai_2, betString, dealer, player, turn, round })
+  }
+
+  onChange( event ) {
+    this.setState({ betString: event.target.value })
   }
 
   playerStay() {
@@ -198,21 +200,13 @@ export default class App extends Component {
   }
 
   setupGame() {
-
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
-
     const deck = CardGenerator.createCards( decks )
     const { dealer, ai_1, ai_2, player, round } = PlayerSetup.createPlayers()
-
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
   }
 
-  startGame() {
-    this.placeBet()
-
-  }
-
-  testDeal() {
+  deal() {
     let { ai_1, ai_2, dealer, deck, player, turn } = this.state
 
     if ( player.hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
@@ -245,14 +239,16 @@ export default class App extends Component {
         <div className="app">
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
           <PlayerUI
+            betString={this.state.betString}
             dealAce={ this.dealAce }
-            testDeal={ this.testDeal }
-            reset={ this.newRound }
-            showCard={ this.showDealerCard }
             doHit={ this.doHit }
+            onChange={ this.onChange }
             placeBet={ this.makeBet }
             playerBank={ player.bank}
             playerHandValue={ player.hand.value }
+            reset={ this.newRound }
+            showCard={ this.showDealerCard }
+            deal={ this.deal }
           />
         </div>
       )
