@@ -1,11 +1,22 @@
 import React, { Component } from 'react'
 import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
+// import { CardGenerator, PlayerSetup } from '../compartments/index'
+import PlayerSetup from '../compartments/PlayerSetup'
+import CardGenerator from '../compartments/CardGenerator'
+import PlayerFunctions from '../compartments/PlayerFunctions'
+
+
+
+// import PlayerFunctions
 
 export default class App extends Component {
 
   constructor( props ) {
     super( props )
+    this.p1ofN = 0.14
+    this.p2ofN = 0.74
+
     this.state = {
       ai_1: {},
       ai_2: {},
@@ -19,7 +30,7 @@ export default class App extends Component {
     this.dealAce = this.dealAce.bind( this )
     this.hitItPlayer = this.hitItPlayer.bind( this )
     this.newRound = this.newRound.bind( this )
-    this.placeBet = this.placeBet.bind( this )
+    this.placeBet = PlayerFunctions.placeBet.bind( this )
     this.setupGame = this.setupGame.bind( this )
     this.showDealerCard = this.showDealerCard.bind( this )
     this.testDeal = this.testDeal.bind( this )
@@ -30,62 +41,14 @@ export default class App extends Component {
     this.setupGame()
     //this.doRound()
   }
+//-------------------------------------
+  aiTurn( whichAiPlayer ) {
+    choiceHit = makeChoice('hit')
+    choiceHold = makeChoice('hold')
 
-
-  createCards( deckQuantity ) {
-    let decks = []
-    for (var q = 0; q < deckQuantity; q++) {
-      const cards = []
-      const faces = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
-      const suits = ['Spade','Diamond','Club','Heart']
-
-      for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 13; j++) {
-          let item = { face: faces[j], suit: suits[i], value: this.getValue(faces[j]), faceDown: false }
-          item.isAce = ( item.value == 11 ) ? true : false
-          cards.push(item)
-        }
-      }
-
-      let passByReference = {deck: cards}
-      this.shuffle(passByReference)
-      decks.push(cards)
-    }
-
-    let merged = [].concat.apply([], decks)
-    this.setState({ deck: merged })
-  }
-
-  createPlayers() {
-    const dealerName = 'Jeff Goldblum'
-    const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
-    const playerName = prompt( 'What is your name?' )
-    const round = 0
-
-    const dealer = {
-      name: dealerName,
-      hand: [],
-      role: 'dealer'
-    }
-    dealer.hand.value = 0
-    dealer.hand.bet = 0
-
-    const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
-    ai_1.hand.value = 0
-    ai_1.hand.bet = 0
-    const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
-    ai_2.hand.value = 0
-    ai_2.hand.bet = 0
-
-    const player = {
-      name: playerName,
-      bank: 100,
-      hand: [],
-      role: 'player'
-    }
-    player.hand.value = 0
-    player.hand.bet = 0
-    this.setState({ dealer, ai_1, ai_2, player, round })
+    if( choiceHit === 'hit' || choiceHold === 'hit' ) hitItPlayer( whichAiPlayer )
+    else if( choiceHit === 'hold' || choiceHold === 'hold' ) holdButton( whichAiPlayer )
+    else throw new Error("Message CM27:The subscriber you are trying to reach is unavailable or outside the calling area.")
   }
 
 //NOTE: Dev function
@@ -113,10 +76,34 @@ export default class App extends Component {
 
   }
 
-  getValue( face ) {
-    if( face === 'A' ) return 11
-    else if(face === 'J' || face === 'Q' || face === 'K') return 10
-    else return parseInt( face )
+  gameLoop( playerTurn, t ) {
+    let turn = t
+    if( playerTurn !== 'player' ) {
+      do {
+        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
+        else t++
+      } while ( turn === t )
+    } else {
+      // Wait for player to click a button
+    }
+    return turn
+  }
+
+  getLocalStorage(type) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+    let holdStats = {
+      currentlyGathering: true,
+      playerHand: player.hand,
+      playerValue: this.handValue( player.hand ),
+      dealerHand: dealer.hand,
+      dealerValue: this.handValue( dealer.hand ),
+      hitOrStay: type,
+      winOrLose: 'pending'
+    }
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    stats.push( holdStats )
+    return stats
   }
 
   handValue( hand ) {
@@ -136,78 +123,19 @@ export default class App extends Component {
 
     if ( value > 21 && hasAce ) { value -= 10 }
     return value
-}
-
-  gameLoop( playerTurn, t ) {
-    let turn = t
-    if( playerTurn !== 'player' ) {
-      do {
-        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
-        else t++
-      } while ( turn === t )
-    } else {
-      // Wait for player to click a button
-    }
-    return turn
-  }
-
-  gameLoop( playerTurn, t ) {
-    let turn = t
-    if( playerTurn !== 'player' ) {
-      do {
-        if( handValue( playerTurn.value <= 17 ) ) hitItPlayer(playerTurn)
-        else t++
-      } while ( turn === t )
-    } else {
-      // Wait for player to click a button
-    }
-    return turn
-  }
-
-  testDeal() {
-    let { ai_1, ai_2, dealer, deck, player, round, turn } = this.state
-
-    if ( round < 1 ) {
-      for ( let cycle = 0; cycle<2; cycle++ ) {
-        ai_1.hand.push( deck.shift() )
-        player.hand.push( deck.shift() )
-        ai_2.hand.push( deck.shift() )
-        dealer.hand.push( deck.shift() )
-        if (cycle === 0) { dealer.hand[0].faceDown = true}
-      }
-      round = 1
-      turn = 1
-      // Done with initialization, begin turns
-
-      // Turn 1 = ai_1
-      turn = gameLoop( 'ai_1', turn )
-
-      // NOTE: We won't be moving on to turn 3 until after a button is clicked.
-      // therfore the rest of the functionality for handling turns should go
-      // in the playerui functions
-      // Turn 2 = player
-      // turn = gameLoop( 'player', turn )
-      // // Turn 3 = ai_2
-      // turn = gameLoop( 'ai_2', turn )
-      // // Turn 4 = dealer
-      // turn = gameLoop( 'dealer', turn )
-
-
-    } else {
-      return
-    }
-    console.log(deck.length)
-    ai_1.hand.value = this.handValue( ai_1.hand )
-    ai_2.hand.value = this.handValue( ai_2.hand )
-    player.hand.value = this.handValue( player.hand )
-    dealer.hand.value = this.handValue( dealer.hand )
-    this.setState({ ai_1, ai_2, dealer, deck, player, round, turn})
   }
 
   hitItPlayer( whichPlayer ) {
 
    let { ai_1, ai_2, dealer, player, deck } = this.state
 
+   // START AI Capture K for k-n-n
+   if( whichPlayer === 'player') {
+     localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
+   }
+   // END AI
+
+   console.log('--> Hand with length?', player.hand)
    const temp = {
      "player": player,
      "dealer": dealer,
@@ -230,6 +158,53 @@ export default class App extends Component {
    }
    else { return  }
 
+  }
+
+  holdButton( whichPlayer ) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+    // START AI Capture K for k-n-n
+    if( whichPlayer === 'player') {
+      localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
+    }
+    // END AI
+  }
+
+  getLocalStorage(type) {
+    let { ai_1, ai_2, dealer, player, deck } = this.state
+
+    let holdStats = {
+      currentlyGathering: true,
+      playerHand: player.hand,
+      playerValue: this.handValue( player.hand ),
+      dealerHand: dealer.hand,
+      dealerValue: this.handValue( dealer.hand ),
+      hitOrStay: type,
+      winOrLose: 'pending'
+    }
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    stats.push( holdStats )
+    return stats
+  }
+
+  makeChoice(type) {
+    // Seek similar hands to what player had
+    let stats = JSON.parse(localStorage.getItem(type) || '[]')
+    let predictAction = stats.find( (ele) => {
+      if(ele.playerValue >= this.p1ofN*currPlayerValue && ele.playerValue < this.p2ofN*currPlayerValue) return ele.hitOrStay
+    })
+
+    // If unable to find similar circumstance, then guess
+    // random and adjust weights
+    if( predictAction === undefined) {
+      do {
+        this.p1ofN = Math.random()
+        this.p2ofN = Math.random()
+      } while (this.p1ofN > this.p2ofN)
+      // Store random value into database to check against later
+      predictAction = Math.random() > 0.5 ? 'hit' : 'stay'
+    }
+    return predictAction
   }
 
   newRound() {
@@ -257,19 +232,6 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, player, turn, round })
   }
 
-  placeBet() {
-    let { player } = this.state
-
-    const betAmount = prompt('How much would you like to bet?')
-    if ( betAmount > player.bank ) { return alert( "You're too broke, go home." ) }
-    else {
-      player.hand.bet = parseInt(betAmount)
-      player.bank -= betAmount
-      this.setState({ player })
-    }
-    // console.log( "BET", betAmount )
-  }
-
   playerStay() {
     let { turn } = this.state
     turn++
@@ -277,27 +239,19 @@ export default class App extends Component {
   }
 
   setupGame() {
+
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
-    this.createCards(decks)
-    this.createPlayers()
+
+    const deck = CardGenerator.createCards( decks )
+    const { dealer, ai_1, ai_2, player, round } = PlayerSetup.createPlayers()
+
+    this.setState({ ai_1, ai_2, dealer, deck, player, round })
   }
 
   showDealerCard() {
     let { dealer } = this.state
     dealer.hand[0].faceDown = false
     this.setState({ dealer })
-  }
-
-  shuffle( passByReference ) {
-    passByReference.deck = passByReference.deck || []
-
-    var j, x, i
-    for (i = passByReference.deck.length; i; i--) {
-      j = Math.floor(Math.random() * i)
-      x = passByReference.deck[i - 1]
-      passByReference.deck[i - 1] = passByReference.deck[j]
-      passByReference.deck[j]= x
-    }
   }
 
   startGame() {
