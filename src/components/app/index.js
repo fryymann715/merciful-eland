@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
+import CardGen from '../compartments/CardGen'
+import CreateGen from '../compartments/CreateGen'
 
 export default class App extends Component {
 
@@ -33,63 +35,6 @@ export default class App extends Component {
     //this.doRound()
   }
 
-
-  createCards( deckQuantity ) {
-    let decks = []
-    for (var q = 0; q < deckQuantity; q++) {
-      const cards = []
-      const faces = ['A','2','3','4','5','6','7','8','9','10','J','Q','K']
-      const suits = ['Spade','Diamond','Club','Heart']
-
-      for (var i = 0; i < 4; i++) {
-        for (var j = 0; j < 13; j++) {
-          let item = { face: faces[j], suit: suits[i], value: this.getValue(faces[j]), faceDown: false }
-          item.isAce = ( item.value == 11 ) ? true : false
-          cards.push(item)
-        }
-      }
-
-      let passByReference = {deck: cards}
-      this.shuffle(passByReference)
-      decks.push(cards)
-    }
-
-    let merged = [].concat.apply([], decks)
-    this.setState({ deck: merged })
-  }
-
-  createPlayers() {
-    const dealerName = 'Jeff Goldblum'
-    const aiNames = [ 'Bob Ross', 'Pamela Anderson' ]
-    const playerName = prompt( 'What is your name?' )
-    const round = 0
-
-    const dealer = {
-      name: dealerName,
-      hand: [],
-      role: 'dealer'
-    }
-    dealer.hand.value = 0
-    dealer.hand.bet = 0
-
-    const ai_1 = { name: aiNames[0], bank: 100, hand: [], role: 'ai' }
-    ai_1.hand.value = 0
-    ai_1.hand.bet = 0
-    const ai_2 = { name: aiNames[1], bank: 100, hand: [], role: 'ai' }
-    ai_2.hand.value = 0
-    ai_2.hand.bet = 0
-
-    const player = {
-      name: playerName,
-      bank: 100,
-      hand: [],
-      role: 'player'
-    }
-    player.hand.value = 0
-    player.hand.bet = 0
-    this.setState({ dealer, ai_1, ai_2, player, round })
-  }
-
 //NOTE: Dev function
   dealAce() {
 
@@ -115,11 +60,7 @@ export default class App extends Component {
 
   }
 
-  getValue( face ) {
-    if( face === 'A' ) return 11
-    else if(face === 'J' || face === 'Q' || face === 'K') return 10
-    else return parseInt( face )
-  }
+
 
   handValue( hand ) {
 
@@ -409,8 +350,10 @@ export default class App extends Component {
 
   setupGame() {
     let decks = (this.state.number_of_decks < 2 ) ? 2 : this.state.number_of_decks
-    this.createCards(decks)
-    this.createPlayers()
+    this.setState({ deck: CardGen.createCards(decks) })
+
+    let { dealer, ai_1, ai_2, player, round } = CreateGen.createPlayers()
+    this.setState({ dealer, ai_1, ai_2, player, round })
   }
 
   showDealerCard() {
@@ -419,17 +362,7 @@ export default class App extends Component {
     this.setState({ dealer })
   }
 
-  shuffle( passByReference ) {
-    passByReference.deck = passByReference.deck || []
 
-    var j, x, i
-    for (i = passByReference.deck.length; i; i--) {
-      j = Math.floor(Math.random() * i)
-      x = passByReference.deck[i - 1]
-      passByReference.deck[i - 1] = passByReference.deck[j]
-      passByReference.deck[j]= x
-    }
-  }
 
   startGame() {
     this.placeBet()
