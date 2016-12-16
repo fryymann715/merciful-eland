@@ -1,10 +1,7 @@
 import React, { Component } from 'react'
 import GameTable from '../GameTable'
 import PlayerUI from '../PlayerUI'
-// import { CardGenerator, PlayerSetup } from '../compartments/index'
-import PlayerSetup from '../compartments/PlayerSetup'
-import CardGenerator from '../compartments/CardGenerator'
-import PlayerFunctions from '../compartments/PlayerFunctions'
+import { CardGenerator, PlayerSetup, PlayerFunctions } from '../compartments/index'
 
 
 
@@ -27,21 +24,22 @@ export default class App extends Component {
       round: 0,
       turn: 0
     }
-    this.dealAce = this.dealAce.bind( this )
-    this.hitItPlayer = this.hitItPlayer.bind( this )
+    this.dealAce = PlayerFunctions.dealAce.bind( this )
+    this.handValue = PlayerFunctions.handValue.bind( this )
+    this.doHit = this.doHit.bind( this )
+    this.makeBet = this.makeBet.bind( this )
     this.newRound = this.newRound.bind( this )
-    this.placeBet = PlayerFunctions.placeBet.bind( this )
+    this.playerBet = PlayerFunctions.playerBet.bind( this )
     this.setupGame = this.setupGame.bind( this )
-    this.showDealerCard = this.showDealerCard.bind( this )
+    this.showDealerCard = PlayerFunctions.showDealerCard.bind( this )
     this.testDeal = this.testDeal.bind( this )
-    this.handValue = this.handValue.bind( this )
   }
 
   componentDidMount() {
     this.setupGame()
-    //this.doRound()
   }
 //-------------------------------------
+
   aiTurn( whichAiPlayer ) {
     choiceHit = makeChoice('hit')
     choiceHold = makeChoice('hold')
@@ -51,19 +49,27 @@ export default class App extends Component {
     else throw new Error("Message CM27:The subscriber you are trying to reach is unavailable or outside the calling area.")
   }
 
-//NOTE: Dev function
-  dealAce() {
+  doHit( whichPlayer ) {
 
-    let { player, deck } = this.state
+    let { ai_1, ai_2, dealer, player, deck } = this.state
 
-    for ( let i=0; i < deck.length; i++ ){
-      if ( deck[i].value == 11 ){
-        player.hand.push( deck[i] )
-        break
-      }
+    if( whichPlayer === 'player') {
+     localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
     }
-    player.hand.value = this.handValue( player.hand )
-    this.setState({ player })
+
+    const temp = {
+    "player": player,
+    "dealer": dealer,
+    "ai_1": ai_1,
+    "ai_2": ai_2
+    }
+    let hand = temp[ whichPlayer ].hand
+    if ( hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
+    if ( PlayerFunctions.handValue( hand ) >= 21 ){ return }
+    let result = PlayerFunctions.hitItPlayer({ deck, hand })
+    temp[ whichPlayer ].hand = result.hand
+
+    this.setState({ ai_1, ai_2, dealer, player, deck: result.deck })
   }
 
   doRound() {
@@ -106,60 +112,6 @@ export default class App extends Component {
     return stats
   }
 
-  handValue( hand ) {
-
-    if ( hand.length <= 0 ){ return 0 }
-
-    let value = 0
-    let hasAce = false
-
-    hand.map( card => {
-
-      if( card.isAce === true ){
-        hasAce = true
-      }
-      value += card.value
-    })
-
-    if ( value > 21 && hasAce ) { value -= 10 }
-    return value
-  }
-
-  hitItPlayer( whichPlayer ) {
-
-   let { ai_1, ai_2, dealer, player, deck } = this.state
-
-   // START AI Capture K for k-n-n
-   if( whichPlayer === 'player') {
-     localStorage.setItem('hit', JSON.stringify( this.getLocalStorage('hit') ))
-   }
-   // END AI
-
-   console.log('--> Hand with length?', player.hand)
-   const temp = {
-     "player": player,
-     "dealer": dealer,
-     "ai_1": ai_1,
-     "ai_2": ai_2
-   }
-
-   let hand = temp[ whichPlayer ].hand
-   if ( hand.bet <= 0 ){ return alert( "You must first place a bet." ) }
-
-   if ( this.handValue( hand ) >= 21 ){ return }
-
-   if ( hand.length < 5 ) {
-     hand.push( deck.shift() )
-     hand.value = this.handValue( hand )
-     temp[whichPlayer].hand = hand
-     this.setState({ ai_1, ai_2, dealer, player, deck })
-
-     return
-   }
-   else { return  }
-
-  }
-
   holdButton( whichPlayer ) {
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
@@ -185,6 +137,13 @@ export default class App extends Component {
     let stats = JSON.parse(localStorage.getItem(type) || '[]')
     stats.push( holdStats )
     return stats
+  }
+
+  makeBet() {
+    let { player } = this.state
+    let updatedPlayer = PlayerFunctions.playerBet( player )
+    this.setState({ updatedPlayer })
+
   }
 
   makeChoice(type) {
@@ -248,12 +207,6 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
   }
 
-  showDealerCard() {
-    let { dealer } = this.state
-    dealer.hand[0].faceDown = false
-    this.setState({ dealer })
-  }
-
   startGame() {
     this.placeBet()
 
@@ -296,8 +249,8 @@ export default class App extends Component {
             testDeal={ this.testDeal }
             reset={ this.newRound }
             showCard={ this.showDealerCard }
-            hitItPlayer={ this.hitItPlayer }
-            placeBet={ this.placeBet }
+            doHit={ this.doHit }
+            placeBet={ this.makeBet }
             playerBank={ player.bank}
             playerHandValue={ player.hand.value }
           />
