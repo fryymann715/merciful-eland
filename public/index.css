@@ -104,7 +104,7 @@ h1, h2, h3, h4, h5, h6 {
 
 }
 
-.player-name h3 {
+.player-name {
   text-shadow: -1px 0 #00fff6, 0 1px #00deff, 1px 0 rgba(255, 243, 243, 0.92), 0 -1px #daff00;
   color: #ff3d00;
 }

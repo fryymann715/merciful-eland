@@ -3,8 +3,10 @@ import React, { PropTypes } from 'react'
 const PlayerUI = ({ betString,
                     dealAce,
                     doHit,
+                    holdButton,
                     onChange,
                     placeBet,
+                    player,
                     playerBank,
                     playerHandValue,
                     reset,
@@ -27,6 +29,10 @@ const PlayerUI = ({ betString,
     doHit("player")
   }
 
+  const handleHold = () => {
+    holdButton()
+  }
+
   const handleHitDealer = () => {
     doHit("dealer")
   }
@@ -46,10 +52,11 @@ const PlayerUI = ({ betString,
   }
 
   const dealAceButton = <button onClick={ handleDealAce }>Deal Ace</button>
-  const dealButton = <button onClick={ handleDeal } >Deal</button>
+  const dealButton = (player.hand.length > 0) ? <span></span> :  <button onClick={ handleDeal } >Deal</button>
   const resetButton = <button onClick={ handleReset } >RESET</button>
   const showCardButton = <button onClick={ handleShowCard } >show dealer</button>
   const hitButton = <button onClick={ handleHit } >Hit</button>
+  const playerHold = <button onClick={ handleHold } >Hold</button>
 
   return (
     <div className="player-ui">
@@ -61,6 +68,7 @@ const PlayerUI = ({ betString,
       <div className="controls container">
         {dealAceButton}
         {dealButton}
+        {playerHold}
         {resetButton}
         {showCardButton}
         {hitButton}
@@ -76,15 +84,17 @@ const PlayerUI = ({ betString,
 
 PlayerUI.propTypes = {
   betString: PropTypes.string,
+  deal: PropTypes.func,
   dealAce: PropTypes.func,
   doHit: PropTypes.func,
+  holdButton: PropTypes.func,
   onchange: PropTypes.func,
   placeBet: PropTypes.func,
+  player: PropTypes.object,
   playerBank: PropTypes.number,
   playerHandValue: PropTypes.number,
   reset: PropTypes.func,
-  showCard: PropTypes.func,
-  deal: PropTypes.func,
+  showCard: PropTypes.func
 }
 
 export default PlayerUI

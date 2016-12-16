@@ -31,6 +31,7 @@ export default class App extends Component {
     this.setupGame = this.setupGame.bind( this )
     this.showDealerCard = PlayerFunctions.showDealerCard.bind( this )
     this.deal = this.deal.bind( this )
+    this.holdButton = this.holdButton.bind( this )
   }
 
   componentDidMount() {
@@ -102,7 +103,7 @@ export default class App extends Component {
     } else {
       // Wait for player to click a button
     }
-    this.setState({turn})
+    this.setState({turn:t})
   }
 
   getLocalStorage(type) {
@@ -147,6 +148,14 @@ export default class App extends Component {
     let stats = JSON.parse(localStorage.getItem(type) || '[]')
     stats.push( holdStats )
     return stats
+  }
+
+  holdButton() {
+    let { turn } = this.state
+    // TODO: disable player UI
+    turn++
+
+    this.setState({ turn })
   }
 
   makeBet( amount = 'none', playerUp = 'none' ) {
@@ -220,10 +229,6 @@ export default class App extends Component {
     this.setState({ ai_1, ai_2, dealer, deck, player, round })
   }
 
-
-
-
-
   deal() {
     let { ai_1, ai_2, dealer, deck, player, turn } = this.state
 
@@ -269,15 +274,17 @@ export default class App extends Component {
           <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
           <PlayerUI
             betString={this.state.betString}
+            deal={ this.deal }
             dealAce={ this.dealAce }
             doHit={ this.doHit }
+            holdButton={ this.holdButton }
             onChange={ this.onChange }
             placeBet={ this.makeBet }
+            player={ player }
             playerBank={ player.bank}
             playerHandValue={ player.hand.value }
             reset={ this.newRound }
             showCard={ this.showDealerCard }
-            deal={ this.deal }
           />
         </div>
       )
