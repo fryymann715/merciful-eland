@@ -96,7 +96,6 @@ export default class App extends Component {
 
   gameLoop( playerTurn, t ) {
     let turn = t
-
     const { ai_1, ai_2, dealer, player } = this.state
     const players = {
       "player": player,
@@ -107,13 +106,17 @@ export default class App extends Component {
     let playerUp = players[ playerTurn ]
 
     if( playerTurn === 'dealer' ) {
-      if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
-        this.doHit(playerTurn)
-      } else t++
+      do {
+        if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
+          this.doHit(playerTurn)
+        } else t++
+      } while ( turn === t )
     }
     else if( playerTurn !== 'player' ) {
       do {
-        if ( playerUp.hand.bet === 0 ){ this.makeBet( 20, playerUp ) }
+        if ( playerUp.hand.bet === 0 ) {
+          playerUp.hand.bet = 20
+        }
         if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
           this.doHit(playerTurn)
         }
@@ -185,7 +188,7 @@ export default class App extends Component {
     if ( turn === 4 ) {
       turn = this.gameLoop( 'dealer', turn )
     }
-    debugger
+
     if ( turn > 4 ) {
       this.settleRound()
     }
@@ -266,8 +269,7 @@ export default class App extends Component {
   }
 
   settleRound() {
-    debugger
-    let { dealer, player, ai_1, ai_2 } = this.state
+    let { dealer, player, ai_1, ai_2, turn } = this.state
     const list = [ai_1, player, ai_2]
     for (var i = 0; i < 3; i++) {
       let selectedHand = list[i].hand
@@ -295,7 +297,8 @@ export default class App extends Component {
         list[i].bank += selectedHand.bet
       }
       // END OF CONDITION CHECKING
-      this.newRound()
+      turn++
+      this.setState({turn})
     }
   }
 
