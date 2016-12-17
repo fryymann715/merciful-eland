@@ -23,8 +23,6 @@ export default class App extends Component {
       turn: 0
     }
 
-    // debugger
-
     this.dealAce = PlayerFunctions.dealAce.bind( this )
     this.handValue = PlayerFunctions.handValue.bind( this )
     this.doHit = this.doHit.bind( this )
@@ -111,7 +109,7 @@ export default class App extends Component {
     if( playerTurn === 'dealer' ) {
       if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
         this.doHit(playerTurn)
-      }
+      } else t++
     }
     else if( playerTurn !== 'player' ) {
       do {
@@ -119,9 +117,7 @@ export default class App extends Component {
         if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
           this.doHit(playerTurn)
         }
-        else {
-          t++
-        }
+        else t++
 
       } while ( turn === t )
     } else {
@@ -182,16 +178,17 @@ export default class App extends Component {
     let { turn } = this.state
     // TODO: disable player UI
     turn++
-
     if( turn === 3) {// Do AI stuff}
       turn = this.gameLoop( 'ai_2', turn )
     }
 
     if ( turn === 4 ) {
       turn = this.gameLoop( 'dealer', turn )
+    }
+    debugger
+    if ( turn > 4 ) {
       this.settleRound()
     }
-    // debugger
     this.setState({ turn })
   }
 
@@ -269,6 +266,7 @@ export default class App extends Component {
   }
 
   settleRound() {
+    debugger
     let { dealer, player, ai_1, ai_2 } = this.state
     const list = [ai_1, player, ai_2]
     for (var i = 0; i < 3; i++) {
@@ -278,6 +276,7 @@ export default class App extends Component {
       let result = this.checkHandStatus( selectedHand )
 
       // LOSE CONDITIONS:
+
       if( result === types.BUST || selectedHand.value < dealer.hand.value ) {
         this.updateMessage("Player ", list[i].name, " eats vast quantities of 💩.")
         // Player banks left alone
@@ -296,11 +295,14 @@ export default class App extends Component {
         list[i].bank += selectedHand.bet
       }
       // END OF CONDITION CHECKING
-      this.endTurn()
+      this.newRound()
     }
   }
 
-  updateMessage(message) {
+  updateMessage(newMessage) {
+    let { message } = this.state
+    console.log("I'm printing",newMessage);
+    message = message + '\n' + newMessage
     this.setState({message})
   }
 
