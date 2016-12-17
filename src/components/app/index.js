@@ -16,11 +16,15 @@ export default class App extends Component {
       betString: '',
       dealer: {},
       deck: [],
+      message: "Welcome",
       number_of_decks: 2,
       player: {},
       round: 0,
       turn: 0
     }
+
+    // debugger
+
     this.dealAce = PlayerFunctions.dealAce.bind( this )
     this.handValue = PlayerFunctions.handValue.bind( this )
     this.doHit = this.doHit.bind( this )
@@ -32,6 +36,7 @@ export default class App extends Component {
     this.showDealerCard = PlayerFunctions.showDealerCard.bind( this )
     this.deal = this.deal.bind( this )
     this.holdButton = this.holdButton.bind( this )
+
   }
 
   componentDidMount() {
@@ -66,8 +71,6 @@ export default class App extends Component {
     temp[ whichPlayer ].hand = result.hand
 
     let handStatus = this.checkHandStatus( result.hand )
-    console.log("Hand Status", handStatus )
-    debugger
     if( handStatus === types.BUST || handStatus === types.TWENTY_1 ) {
       this.endTurn()
     }
@@ -86,9 +89,11 @@ export default class App extends Component {
   }
 
   checkHandStatus( hand ) {
-    if ( hand.value === 21 ){ return types.TWENTY_1 }
-    else if ( hand.value > 21 ){ return types.BUST }
-    else { return types.NORM }
+    if (hand) {
+      if ( hand.value === 21 ){ return types.TWENTY_1 }
+      else if ( hand.value > 21 ){ return types.BUST }
+      else { return types.NORM }
+    } else throw new Error("checkingHandStatus before hand created")
   }
 
   gameLoop( playerTurn, t ) {
@@ -114,12 +119,17 @@ export default class App extends Component {
         if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
           this.doHit(playerTurn)
         }
-        else t++
+        else {
+          t++
+        }
+
       } while ( turn === t )
     } else {
       // Wait for player to click a button
     }
-    this.setState({turn:t})
+
+    this.setState({turn: t})
+    return t
   }
 
   getLocalStorage(type) {
@@ -173,12 +183,15 @@ export default class App extends Component {
     // TODO: disable player UI
     turn++
 
-    if( turn > 2) {// Do AI stuff}
-      this.gameLoop( 'ai_2', turn )
-      this.gameLoop( 'dealer', turn )
-      this.settleRound()
+    if( turn === 3) {// Do AI stuff}
+      turn = this.gameLoop( 'ai_2', turn )
     }
 
+    if ( turn === 4 ) {
+      turn = this.gameLoop( 'dealer', turn )
+      this.settleRound()
+    }
+    // debugger
     this.setState({ turn })
   }
 
@@ -266,7 +279,7 @@ export default class App extends Component {
 
       // LOSE CONDITIONS:
       if( result === types.BUST || selectedHand.value < dealer.hand.value ) {
-        console.log("Player ", list[i].name, " eats vast quantities of 💩.")
+        this.updateMessage("Player ", list[i].name, " eats vast quantities of 💩.")
         // Player banks left alone
 
       // WIN CONDITIONS:
@@ -274,17 +287,21 @@ export default class App extends Component {
       || (result === types.TWENTY_1 || selectedHand.value > dealer.hand.value )
       && dealer.hand.value !== selectedHand.value) {
 
-        console.log("Player ", list[i].name, " WON!!!")
+        this.updateMessage("Player ", list[i].name, " WON!!!")
         list[i].bank += selectedHand.bet * 2
 
       // PUSH CONDITIONS:
       } else {
-        console.log(list[i].name + " pushed...like a chump...")
+        this.updateMessage(list[i].name + " pushed...like a chump...")
         list[i].bank += selectedHand.bet
       }
       // END OF CONDITION CHECKING
-
+      this.endTurn()
     }
+  }
+
+  updateMessage(message) {
+    this.setState({message})
   }
 
   deal() {
@@ -305,7 +322,6 @@ export default class App extends Component {
     } else {
       return
     }
-    console.log(deck.length)
     ai_1.hand.value = PlayerFunctions.handValue( ai_1.hand )
     ai_2.hand.value = PlayerFunctions.handValue( ai_2.hand )
     player.hand.value = PlayerFunctions.handValue( player.hand )
@@ -313,38 +329,39 @@ export default class App extends Component {
 
     this.setState({ ai_1, ai_2, dealer, deck, player, turn })
 
-    // Disable player UI while player 1 is going
-
-    // Turn 1 = ai_1
     this.gameLoop( 'ai_1', turn )
-
-    // Enable player controls
-
 
   }
 
   render() {
 
-    const { ai_1, ai_2, dealer, deck, player, round, turn } = this.state
+    const { ai_1, ai_2, dealer, deck, message, player, round, turn } = this.state
+
+    const gTable = ( deck.length !== 0 )
+    ? <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} message={message} />
+    : <div></div>
+    const pUI = ( deck.length !== 0 )
+    ?   <PlayerUI
+        betString={this.state.betString}
+        deal={ this.deal }
+        dealAce={ this.dealAce }
+        doHit={ this.doHit }
+        holdButton={ this.holdButton }
+        turn={ turn }
+        onChange={ this.onChange }
+        placeBet={ this.makeBet }
+        player={ player }
+        playerBank={ player.bank}
+        playerHandValue={ player.hand.value }
+        reset={ this.newRound }
+        showCard={ this.showDealerCard }
+      />
+      : <div></div>
 
     return (
         <div className="app">
-          <GameTable ai_1={ai_1} ai_2={ai_2} dealer={dealer} deck={deck} player={player} round={round} />
-          <PlayerUI
-            betString={this.state.betString}
-            deal={ this.deal }
-            dealAce={ this.dealAce }
-            doHit={ this.doHit }
-            holdButton={ this.holdButton }
-            turn={ turn }
-            onChange={ this.onChange }
-            placeBet={ this.makeBet }
-            player={ player }
-            playerBank={ player.bank}
-            playerHandValue={ player.hand.value }
-            reset={ this.newRound }
-            showCard={ this.showDealerCard }
-          />
+          { gTable }
+          { pUI }
         </div>
       )
   }

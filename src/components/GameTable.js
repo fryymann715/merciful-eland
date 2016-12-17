@@ -1,9 +1,10 @@
 import React, { PropTypes } from 'react'
 import Player from './Player'
 import Dealer from './Dealer'
+import MessageZone from './MessageZone'
 import gamelogo from '../../public/images/gamelogo.png'
 
-const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
+const GameTable = ({ ai_1, ai_2, dealer, deck, message, player, round }) => {
 
   // const showValue = () => {
   //   if ( dealer.hand.value ){
@@ -23,6 +24,7 @@ const GameTable = ({ ai_1, ai_2, dealer, deck, player, round }) => {
 
       <div className="slot ai-slot">
         <Player name={ ai_1.name } hand={ ai_1.hand }/>
+        <MessageZone message={message}/>
         <Player name={ ai_2.name } hand={ ai_2.hand }/>
       </div>
 
@@ -41,7 +43,8 @@ GameTable.propTypes = {
   dealer: PropTypes.object,
   deck: PropTypes.array,
   player: PropTypes.object,
-  round: PropTypes.number
+  round: PropTypes.number,
+  message: PropTypes.string
 }
 
 export default GameTable
