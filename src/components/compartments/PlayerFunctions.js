@@ -55,12 +55,6 @@ const PlayerFunctions = {
 
       return player
     }
-  },
-
-  showDealerCard: () => {
-    let { dealer } = this.state
-    dealer.hand[0].faceDown = false
-    this.setState({ dealer })
   }
 
 }

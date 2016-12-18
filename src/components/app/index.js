@@ -16,13 +16,12 @@ export default class App extends Component {
       betString: '',
       dealer: {},
       deck: [],
-      message: "Welcome",
+      message: [],
       number_of_decks: 2,
       player: {},
       round: 0,
       turn: 0
     }
-
     this.dealAce = PlayerFunctions.dealAce.bind( this )
     this.handValue = PlayerFunctions.handValue.bind( this )
     this.doHit = this.doHit.bind( this )
@@ -31,10 +30,9 @@ export default class App extends Component {
     this.onChange = this.onChange.bind( this )
     this.playerBet = PlayerFunctions.playerBet.bind( this )
     this.setupGame = this.setupGame.bind( this )
-    this.showDealerCard = PlayerFunctions.showDealerCard.bind( this )
+    this.showDealerCard = this.showDealerCard.bind( this )
     this.deal = this.deal.bind( this )
     this.holdButton = this.holdButton.bind( this )
-
   }
 
   componentDidMount() {
@@ -44,7 +42,6 @@ export default class App extends Component {
   aiTurn( whichAiPlayer ) {
     choiceHit = makeChoice('hit')
     choiceHold = makeChoice('hold')
-
     if( choiceHit === 'hit' || choiceHold === 'hit' ) hitItPlayer( whichAiPlayer )
     else if( choiceHit === 'hold' || choiceHold === 'hold' ) holdButton( whichAiPlayer )
     else throw new Error("Message CM27:The subscriber you are trying to reach is unavailable or outside the calling area.")
@@ -103,10 +100,12 @@ export default class App extends Component {
       "ai_1": ai_1,
       "ai_2": ai_2
     }
+
     let playerUp = players[ playerTurn ]
 
     if( playerTurn === 'dealer' ) {
       do {
+        this.showDealerCard()
         if( PlayerFunctions.handValue( playerUp.hand ) <= 17 ) {
           this.doHit(playerTurn)
         } else t++
@@ -123,7 +122,12 @@ export default class App extends Component {
         else t++
 
       } while ( turn === t )
-    } else {
+    }
+    else {
+      if ( player.hand.length === 2 && player.hand.value === 21 ) {
+        t++
+        return
+      }
       // Wait for player to click a button
     }
 
@@ -148,17 +152,6 @@ export default class App extends Component {
     return stats
   }
 
-//NOTE: Mulitple holdButton
-  // holdButton( whichPlayer ) {
-  //   let { ai_1, ai_2, dealer, player, deck } = this.state
-  //
-  //   // START AI Capture K for k-n-n
-  //   if( whichPlayer === 'player') {
-  //     localStorage.setItem('hold', JSON.stringify( this.getLocalStorage('hold') ))
-  //   }
-  //   // END AI
-  // }
-
   getLocalStorage(type) {
     let { ai_1, ai_2, dealer, player, deck } = this.state
 
@@ -176,7 +169,6 @@ export default class App extends Component {
     return stats
   }
 
-//NOTE: Multiple holdButton
   endTurn() {
     let { turn } = this.state
     // TODO: disable player UI
@@ -246,19 +238,16 @@ export default class App extends Component {
     player.hand = []
     player.hand.value = 0
     player.hand.bet = 0
+
+    let message = []
     turn = 0
     round++
-    this.setState({ ai_1, ai_2, betString, dealer, player, turn, round })
+
+    this.setState({ ai_1, ai_2, betString, dealer, message, player, turn, round })
   }
 
   onChange( event ) {
     this.setState({ betString: event.target.value })
-  }
-
-  playerStay() {
-    let { turn } = this.state
-    turn++
-    this.setState({ turn })
   }
 
   setupGame() {
@@ -270,17 +259,19 @@ export default class App extends Component {
 
   settleRound() {
     let { dealer, player, ai_1, ai_2, turn } = this.state
-    const list = [ai_1, player, ai_2]
+    const players = [ai_1, player, ai_2]
+
+    const roundMessage = []
     for (var i = 0; i < 3; i++) {
-      let selectedHand = list[i].hand
+      let selectedHand = players[i].hand
 
       // TODO: name result something better
       let result = this.checkHandStatus( selectedHand )
 
       // LOSE CONDITIONS:
 
-      if( result === types.BUST || selectedHand.value < dealer.hand.value ) {
-        this.updateMessage("Player ", list[i].name, " eats vast quantities of 💩.")
+      if( result === types.BUST || (selectedHand.value < dealer.hand.value && dealer.hand.value < 22 ) ) {
+        roundMessage.push(`${players[i].name} eats vast quantities of 💩.\n`)
         // Player banks left alone
 
       // WIN CONDITIONS:
@@ -288,25 +279,34 @@ export default class App extends Component {
       || (result === types.TWENTY_1 || selectedHand.value > dealer.hand.value )
       && dealer.hand.value !== selectedHand.value) {
 
-        this.updateMessage("Player ", list[i].name, " WON!!!")
-        list[i].bank += selectedHand.bet * 2
+        roundMessage.push(`${players[i].name} won!!\n`)
+        players[i].bank += selectedHand.bet * 2
 
       // PUSH CONDITIONS:
       } else {
-        this.updateMessage(list[i].name + " pushed...like a chump...")
-        list[i].bank += selectedHand.bet
+        roundMessage.push(`${players[i].name} pushed like a chump...\n`)
+        players[i].bank += selectedHand.bet
       }
       // END OF CONDITION CHECKING
       turn++
       this.setState({turn})
     }
+    this.updateMessage( roundMessage )
   }
 
-  updateMessage(newMessage) {
-    let { message } = this.state
-    console.log("I'm printing",newMessage);
-    message = message + '\n' + newMessage
-    this.setState({message})
+
+  showDealerCard() {
+    console.log('Getting Things')
+    let { dealer } = this.state
+    console.log( dealer )
+    dealer.hand[0].faceDown = false
+    this.setState({ dealer })
+  }
+
+
+  updateMessage(message) {
+    if ( message.length < 1 || message === undefined ){ return }
+    this.setState({ message })
   }
 
   deal() {
@@ -356,8 +356,6 @@ export default class App extends Component {
         onChange={ this.onChange }
         placeBet={ this.makeBet }
         player={ player }
-        playerBank={ player.bank}
-        playerHandValue={ player.hand.value }
         reset={ this.newRound }
         showCard={ this.showDealerCard }
       />

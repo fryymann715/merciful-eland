@@ -44,7 +44,7 @@ GameTable.propTypes = {
   deck: PropTypes.array,
   player: PropTypes.object,
   round: PropTypes.number,
-  message: PropTypes.string
+  message: PropTypes.array
 }
 
 export default GameTable

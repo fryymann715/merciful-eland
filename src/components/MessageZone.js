@@ -1,15 +1,20 @@
 import React, { PropTypes } from 'react'
 
 const MessageZone = ({ message }) => {
+
+  const messageElements = message.map( ( blip, key ) => {
+    return <div key={key}>{blip}</div>
+  })
+
   return (
   <div className="mainMessage">
-    <h2>{message}</h2>
+    {messageElements}
   </div>
     )
 }
 
 MessageZone.propTypes = {
-  message: PropTypes.string
+  message: PropTypes.array
 }
 
 export default MessageZone

@@ -17,6 +17,8 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+  min-height: 600px;
 }
 
 .bet input {
@@ -42,9 +44,13 @@ h1, h2, h3, h4, h5, h6 {
   /*height: 100px;*/
 }
 
+.Club { background-image: url("./images/spade.png"); }
+.Spade { background-image: url("./images/club.png"); }
+.Heart { background-image: url('./images/heart.png'); }
+.Diamond { background-image: url('./images/diamond.png'); }
+
 .card.face {
   background-color: white;
-  background-image: url("./images/spade.png")
   background-size: 90%;
   background-repeat: no-repeat;
   background-position: center;*/
@@ -90,10 +96,19 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: row;
 }
 
+.mainMessage {
+  background-color: rgba( 200, 200, 200, 0.5);
+  border-radius: 20px;
+  box-shadow: 0 4px 8px 0 black;
+  color: rgb(148, 18, 18);
+  font-weight: bold;
+  padding: 10px;
+}
+
 .player {
   display: flex;
   flex-direction: column;
-  padding: 50px;
+  padding: 5px;
 }
 
 .player-name {
@@ -117,6 +132,7 @@ h1, h2, h3, h4, h5, h6 {
   width: 80%;
   background-color: #1d3542;
   color: white;
+  min-height: 20%;
 }
 
 .slot {
@@ -126,21 +142,22 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .table {
-  background-color: rgb(26, 85, 28);
-  width: 95%;
-  height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  background-color: rgb(26, 85, 28);
   background-image: url('https://s27.postimg.org/751qujf8j/Game_Page_BJ_Main_1461050691624_tcm1582_294463.jpg');
   background-repeat: no-repeat;
   background-position: right;
   background-size: 100%;
+  border-color: black;
+  border-radius: 60px;
   border-style: inset;
   border-width: 2px;
-  border-color: black;
-  margin-top:100px;
+  display: flex;
+  flex-direction: column;
+  height: 500px;
+  justify-content: space-between;
+  min-height: 80%;
+  width: 95%;
   /*border-image-source: url('https://s27.postimg.org/xhl5spu3n/image.jpg');
   border-image-repeat: repeat;*/
 }
