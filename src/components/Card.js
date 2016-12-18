@@ -20,9 +20,9 @@ const Card = ({ face, suit, faceDown }) => {
     }
 
     if(str == "content") {
-      return "card face " + hideOnTrue
+      return `card face ${suit} ${hideOnTrue}`
     } else {
-      return "card faceDown " + revealOnTrue
+      return `card faceDown ${suit} ${revealOnTrue}`
     }
   }
 
@@ -30,7 +30,7 @@ const Card = ({ face, suit, faceDown }) => {
   <div>
     <div className={classString("content")} >
       <span>{ face }</span>
-      <span>{ suit }</span>
+      {/* <span>{ suit }</span> */}
     </div>
     <div className={classString("back")}></div>
   </div>
