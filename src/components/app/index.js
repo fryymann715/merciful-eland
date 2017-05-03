@@ -199,20 +199,16 @@ export default class App extends Component {
   }
 
   makeChoice(type) {
-    // Seek similar hands to what player had
     let stats = JSON.parse(localStorage.getItem(type) || '[]')
     let predictAction = stats.find( (ele) => {
       if(ele.playerValue >= this.p1ofN*currPlayerValue && ele.playerValue < this.p2ofN*currPlayerValue) return ele.hitOrStay
     })
 
-    // If unable to find similar circumstance, then guess
-    // random and adjust weights
     if( predictAction === undefined) {
       do {
         this.p1ofN = Math.random()
         this.p2ofN = Math.random()
       } while (this.p1ofN > this.p2ofN)
-      // Store random value into database to check against later
       predictAction = Math.random() > 0.5 ? 'hit' : 'stay'
     }
     return predictAction
@@ -265,16 +261,11 @@ export default class App extends Component {
     for (var i = 0; i < 3; i++) {
       let selectedHand = players[i].hand
 
-      // TODO: name result something better
       let result = this.checkHandStatus( selectedHand )
-
-      // LOSE CONDITIONS:
 
       if( result === types.BUST || (selectedHand.value < dealer.hand.value && dealer.hand.value < 22 ) ) {
         roundMessage.push(`${players[i].name} eats vast quantities of 💩.\n`)
-        // Player banks left alone
 
-      // WIN CONDITIONS:
       } else if ( dealer.hand.value > 21
       || (result === types.TWENTY_1 || selectedHand.value > dealer.hand.value )
       && dealer.hand.value !== selectedHand.value) {
@@ -282,12 +273,10 @@ export default class App extends Component {
         roundMessage.push(`${players[i].name} won!!\n`)
         players[i].bank += selectedHand.bet * 2
 
-      // PUSH CONDITIONS:
       } else {
         roundMessage.push(`${players[i].name} pushed like a chump...\n`)
         players[i].bank += selectedHand.bet
       }
-      // END OF CONDITION CHECKING
       turn++
       this.setState({turn})
     }

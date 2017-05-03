@@ -40,10 +40,6 @@ h1, h2, h3, h4, h5, h6 {
   flex-direction: column;
 }
 
-.card row {
-  /*height: 100px;*/
-}
-
 .Club { background-image: url("./images/spade.png"); }
 .Spade { background-image: url("./images/club.png"); }
 .Heart { background-image: url('./images/heart.png'); }
@@ -57,7 +53,6 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .card.faceDown {
-  /*background-image: url("./images/spade.png")*/
   background-image: url('https://s24.postimg.org/yk4rcl2qt/images.jpg');
   background-size: 90%;
   background-repeat: no-repeat;
