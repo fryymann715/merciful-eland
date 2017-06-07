@@ -1,12 +1,8 @@
-# BlackJack for the Web in ReactJS
+# BlackJack for the Web in ReactJS ( Celebrity BlackJack with Jeff Goldblum )
 
-## Specs
+ - ### Stack
+    - ReactJS
 
- - ### Stack / Tech
-    - ReactJS 
-    - Manage state without Redux/Flux
-    - No Database
-    - Do not use 3rd part CSS library/framework
     
  
  - ### Players can:
@@ -14,15 +10,12 @@
     - Hit / Stay 
     - Place bet ( can not place bet larger than player's funds )
     - Quit
-    
-    STRETCH: double down, split, buy insurance
-    
- 
+
  - ### Table Features
-    - 4 players + 1 dealer
+    - 3 players + 1 dealer
     - 2 decks
-    - players start with $100
-    - min bet starts at $10 ( STRETCH: Increase min bet based on player funds )
+    - players start with $1000
+    - min bet starts at $25
     - deck is persistent through the rounds
     - player bet refunded on push
     - dealer hits on 17
