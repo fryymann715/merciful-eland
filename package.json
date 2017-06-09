@@ -6,11 +6,20 @@
     "type": "git",
     "url": "https://github.com/fryymann715/merciful-eland"
   },
-  "author": {
+  "contributors": [{
     "name": "Ian Deans",
     "email": "ideans715@gmail.com",
     "url": "http://fryymann715.github.io"
   },
+  {
+    "name": "Serafin Wesnidge",
+    "email": "serafin@lumodon.net",
+    "url": "www.lumodon.net"
+  },
+  {
+    "name": "Debrena McEwen",
+    "url": "https://github.com/teqnickels"
+  }],
   "dependencies": {
     "react": "^15.3.2",
     "react-dom": "^15.3.2",
