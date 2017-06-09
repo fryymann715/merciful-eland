@@ -264,7 +264,7 @@ export default class App extends Component {
       let result = this.checkHandStatus( selectedHand )
 
       if( result === types.BUST || (selectedHand.value < dealer.hand.value && dealer.hand.value < 22 ) ) {
-        roundMessage.push(`${players[i].name} eats vast quantities of 💩.\n`)
+        roundMessage.push(`${players[i].name} Didn't do so well.\n`)
 
       } else if ( dealer.hand.value > 21
       || (result === types.TWENTY_1 || selectedHand.value > dealer.hand.value )
